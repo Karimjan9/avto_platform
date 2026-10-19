@@ -1,0 +1,51 @@
+@import 'tailwindcss' source(none);
+
+@plugin 'daisyui' {
+    themes: light --default;
+    include: button, badge, input, select, textarea, checkbox, loading, alert, table, menu, skeleton;
+    logs: false;
+}
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-brand: #f3c744;
+    --color-ink: #192327;
+}
+
+@layer base {
+    body { color: #192327; background: #f6f7f7; }
+    button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+    :focus-visible { outline: 3px solid #17675c; outline-offset: 3px; }
+    [x-cloak] { display: none !important; }
+    button, select, summary { cursor: pointer; }
+    [data-icon] { display: inline-block; width: 1.25rem; height: 1.25rem; flex-shrink: 0; }
+}
+
+@layer components {
+    .shell { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
+    .panel { @apply rounded-2xl border border-slate-200 bg-white; }
+    .field { @apply flex flex-col gap-2 text-sm font-medium; }
+    .field .input, .field .select, .field .textarea { @apply w-full; }
+    .muted { @apply text-sm leading-6 text-slate-600; }
+    .btn-brand { @apply border-transparent bg-brand text-ink shadow-none hover:bg-amber-300; }
+    .btn-ink { @apply border-transparent bg-ink text-white shadow-none hover:bg-slate-700; }
+    .eyebrow { @apply text-xs font-bold uppercase tracking-[0.16em] text-emerald-800; }
+    .page-heading { @apply text-3xl font-bold tracking-tight sm:text-4xl; }
+    .card-image { @apply flex aspect-[4/3] items-center justify-center overflow-hidden bg-slate-100; }
+    .ts-control { min-height: 42px; border-radius: 8px; border-color: #cbd5e1; padding: 10px 12px; }
+    .ts-dropdown { border-radius: 8px; z-index: 50; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+
+.btn.btn-brand { background: #f3c744; color: #192327; border-color: #f3c744; }
+.btn.btn-brand:hover { background: #f8d66c; border-color: #f8d66c; }
+.btn.btn-ink { background: #192327; color: white; border-color: #192327; }
+.btn.btn-ink:hover { background: #334155; border-color: #334155; }

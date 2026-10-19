@@ -1,0 +1,111 @@
+import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+
+test('marketplace is accessible, mobile layout fits, and heavy widgets stay unloaded', async ({ page }, testInfo) => {
+    const errors = [], scripts = [];
+    page.on('pageerror', error => errors.push(error.message));
+    page.on('request', request => { if (request.resourceType() === 'script') scripts.push(request.url()); });
+    await page.goto('/');
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+    expect(scripts.some(url => /inventory-|listing-editor-|calendar-|status-chart-|csv-import-/.test(url))).toBeFalsy();
+    const scan = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+    expect(scan.violations.filter(item => ['critical', 'serious'].includes(item.impact))).toEqual([]);
+    await page.screenshot({ path: `test-results/home-${testInfo.project.name}.png`, fullPage: true });
+    await page.getByRole('button', { name: 'Narx shkalasi' }).click();
+    await expect(page.locator('.noUi-target')).toBeVisible();
+    expect(errors).toEqual([]);
+});
+
+test('web registration, dynamic part form and image upload use session authentication', async ({ page }) => {
+    const errors = []; page.on('pageerror', error => errors.push(error.message));
+    await page.goto('/royxatdan-otish');
+    await page.getByLabel('Ismingiz').fill('Frontend sinovchi');
+    await page.getByLabel('Email', { exact: true }).fill(`browser-${Date.now()}@avto.test`);
+    await page.getByLabel('Parol', { exact: true }).fill('BrowserPass123');
+    await page.getByLabel('Parolni takrorlang').fill('BrowserPass123');
+    await page.getByRole('button', { name: 'Akkaunt yaratish' }).click();
+    await expect(page).toHaveURL('/kabinet');
+    await page.goto('/kabinet/elonlar/yangi');
+    await expect(page.locator('[data-path="section"]')).toBeVisible();
+    await page.locator('[data-path="section"]').selectOption('parts');
+    await expect(page.locator('[data-path="details.stock_quantity"]')).toBeVisible();
+    await page.locator('[data-path="title"]').fill('Brauzer sinovi uchun tormoz kolodkasi');
+    await page.locator('[data-path="description"]').fill('Bu mahsulot faqat izolyatsiyalangan brauzer sinovida yaratilgan.');
+    await page.locator('[data-path="price"]').fill('150000');
+    await page.locator('[data-path="contact_phone"]').fill('+998901112233');
+    await page.locator('[data-path="details.stock_quantity"]').fill('7');
+    await page.locator('input.filepond--browser').setInputFiles({ name: 'sinov.png', mimeType: 'image/png', buffer: await page.screenshot({ type: 'png' }) });
+    await expect(page.locator('.filepond--item')).toHaveCount(1);
+    await page.getByRole('button', { name: 'Saqlash', exact: true }).click();
+    await expect(page.locator('[data-save-status]')).toHaveText('Qoralama saqlandi.');
+    await expect(page.locator('[data-existing-images] img')).toHaveCount(1);
+    await page.reload();
+    await expect(page.locator('[data-path="title"]')).toHaveValue('Brauzer sinovi uchun tormoz kolodkasi');
+    expect(errors).toEqual([]);
+});
+
+test('vehicle form changes between electric car, rental and electric moto', async ({ page }) => {
+    await page.goto('/kirish');
+    await page.getByLabel('Email', { exact: true }).fill('frontend-owner@avto.test');
+    await page.getByLabel('Parol', { exact: true }).fill('BrowserPass123');
+    await page.getByRole('button', { name: 'Kirish', exact: true }).click();
+    await page.goto('/kabinet/elonlar/yangi');
+    await page.locator('[data-path="details.fuel_type"]').selectOption('electric');
+    await expect(page.locator('[data-path="details.battery_capacity_kwh"]')).toBeVisible();
+    await expect(page.locator('[data-path="details.engine_cc"]')).toHaveCount(0);
+    await page.locator('[data-path="offer_type"]').selectOption('rent');
+    await expect(page.locator('[data-path="rental.deposit"]')).toBeVisible();
+    await page.locator('[data-path="section"]').selectOption('moto');
+    await expect(page.locator('[data-path="rental.deposit"]')).toHaveCount(0);
+    await page.locator('[data-path="details.fuel_type"]').selectOption('electric');
+    await expect(page.locator('[data-path="details.battery_voltage_v"]')).toBeVisible();
+    await expect(page.locator('[data-path="details.battery_capacity_kwh"]')).toHaveCount(0);
+});
+
+test('business table, CSV preview and rental calendar load their own modules', async ({ page }, testInfo) => {
+    const errors = []; page.on('pageerror', error => errors.push(error.message));
+    await page.goto('/kirish');
+    await page.getByLabel('Email', { exact: true }).fill('frontend-owner@avto.test');
+    await page.getByLabel('Parol', { exact: true }).fill('BrowserPass123');
+    await page.getByRole('button', { name: 'Kirish', exact: true }).click();
+    await page.getByRole('link', { name: /Sinov ehtiyot qismlari/ }).click();
+    await expect(page.locator('.tabulator-row')).not.toHaveCount(0);
+    const stock = page.locator('.tabulator-row .tabulator-cell[tabulator-field="stock"]').first();
+    await stock.dblclick();
+    await stock.locator('input').fill('12');
+    await stock.locator('input').press('Enter');
+    await expect(stock).toHaveText('12');
+    await page.locator('[data-csv-file]').setInputFiles({ name: 'sinov.csv', mimeType: 'text/csv', buffer: Buffer.from('title,description,price,currency,city,contact_phone,details.stock_quantity\nCSV sinov mahsuloti,Brauzer orqali tekshirilgan ehtiyot qism,100000,UZS,Buxoro,+998901112233,5') });
+    await expect(page.locator('[data-csv-preview]')).toContainText('CSV sinov mahsuloti');
+    await page.locator('[data-csv-save]').click();
+    await expect(page.locator('[data-csv-status]')).toContainText('1 ta mahsulot qoralama sifatida saqlandi');
+    await page.goto('/kabinet');
+    await page.getByRole('link', { name: 'Bandlik kalendari' }).first().click();
+    await expect(page.locator('[data-calendar-status]')).toContainText('faol bandlov');
+    await expect(page.locator('[data-calendar-view]')).toContainText('Bugun');
+    await expect(page.locator('[data-calendar-view]').getByRole('heading', { level: 2 })).toContainText(/Yanvar|Fevral|Mart|Aprel|May|Iyun|Iyul|Avgust|Sentabr|Oktabr|Noyabr|Dekabr/);
+    await page.screenshot({ path: `test-results/calendar-${testInfo.project.name}.png`, fullPage: true });
+    expect(errors).toEqual([]);
+});
+
+test('listing gallery zoom and rental availability work on the public page', async ({ page }) => {
+    const errors = []; page.on('pageerror', error => errors.push(error.message));
+    await page.goto('/');
+    await page.getByRole('link', { name: 'Sinov arenda avtomobili', exact: true }).first().click();
+    await expect(page.locator('[data-gallery] img').first()).toBeVisible();
+    await expect.poll(() => page.locator('[data-gallery] img').first().evaluate(img => img.naturalWidth)).toBeGreaterThan(0);
+    await page.locator('[data-gallery] a').first().focus();
+    await page.locator('[data-gallery] a').first().press('Enter');
+    await expect(page.locator('.pswp--open')).toBeVisible();
+    await expect(page.locator('.pswp')).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(page.locator('.pswp--open')).toHaveCount(0);
+    const start = new Date(Date.now() + 6 * 86400000).toISOString().slice(0, 10), end = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
+    await page.locator('[data-rental-start]').fill(start);
+    await page.locator('[data-rental-start]').press('Tab');
+    await page.locator('[data-rental-end]').fill(end);
+    await page.locator('[data-rental-end]').press('Tab');
+    await expect(page.locator('[data-availability]')).toContainText('hozircha bo‘sh');
+    expect(errors).toEqual([]);
+});

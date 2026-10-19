@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'conditions' => ['new' => 'Yangi', 'used' => 'B/u'],
+    'offer_types' => ['sale' => 'Sotuv', 'rent' => 'Arenda'],
+    'rental_periods' => ['day' => 'Kun', 'week' => 'Hafta', 'month' => 'Oy'],
+    'currencies' => ['UZS', 'USD'],
+    'moto_types' => ['motorcycle' => 'Mototsikl', 'scooter' => 'Skuter', 'moped' => 'Moped'],
+    'fuel_types' => ['gasoline', 'diesel', 'lpg', 'cng', 'hybrid', 'electric'],
+    'transmissions' => ['manual', 'automatic', 'cvt', 'robotized'],
+    'body_types' => ['sedan', 'hatchback', 'wagon', 'suv', 'crossover', 'pickup', 'minivan', 'van', 'coupe', 'convertible', 'other'],
+    'drive_types' => ['fwd', 'rwd', 'awd'],
+    'deal_terms' => ['cash' => 'Naqd', 'installment' => 'Nasiya', 'exchange' => 'Almashtirish'],
+    'technical_conditions' => ['excellent' => 'A’lo', 'good' => 'Yaxshi', 'needs_repair' => 'Ta’mir talab', 'damaged' => 'Shikastlangan'],
+    'gas_equipment' => ['none' => 'Yo‘q', 'lpg' => 'Propan', 'cng' => 'Metan'],
+    'charging_types' => ['type1', 'type2', 'ccs1', 'ccs2', 'gbt_ac', 'gbt_dc', 'chademo', 'nacs'],
+    'part_categories' => ['tyres' => 'Shina', 'headlights' => 'Fara / chiroq', 'engine' => 'Motor', 'transmission' => 'Uzatma', 'body' => 'Kuzov', 'electrical' => 'Elektr jihozlari', 'brakes' => 'Tormoz', 'suspension' => 'Osma', 'accessories' => 'Aksessuar', 'other' => 'Boshqa'],
+    'part_origins' => ['original' => 'Original', 'aftermarket' => 'Analog'],
+    'part_units' => ['piece' => 'Dona', 'set' => 'Komplekt'],
+    'tyre_seasons' => ['summer' => 'Yozgi', 'winter' => 'Qishki', 'all_season' => 'Barcha mavsum'],
+    'part_sides' => ['left' => 'Chap', 'right' => 'O‘ng', 'pair' => 'Juft'],
+    'part_positions' => ['front' => 'Old', 'rear' => 'Orqa'],
+    'driver_options' => ['with_driver' => 'Haydovchi bilan', 'without_driver' => 'Haydovchisiz', 'either' => 'Ikkala variant'],
+    'moto_transmissions' => ['manual', 'automatic', 'cvt', 'semi_automatic'],
+    'max_images' => 10,
+    'image_max_kb' => 5120,
+];

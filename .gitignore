@@ -29,3 +29,15 @@ Homestead.json
 .env.production
 .phpactor.json
 auth.json
+
+# Local tools and editor settings
+/.tools
+/.idea
+/.vscode
+/.fleet
+/.DS_Store
+/Thumbs.db
+/playwright-report/
+/test-results/
+.env.*
+!.env.example
