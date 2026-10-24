@@ -1,6 +1,6 @@
 /**
- * Original BuxoroAvto vector identity: custom B/A paths and a road lane accent.
- * No stock symbols, fonts, or external graphics are used in the icon itself.
+ * User-selected Bitim identity: opposing sweeps around an automotive silhouette.
+ * All icon formats come from the editable, font-independent SVG master.
  * Run with Node 24: node scripts/generate-brand-assets.mjs
  * Chromium (Playwright) renders the SVG; Roboto is used only on the share card.
  */
@@ -14,20 +14,27 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const publicDir = resolve(root, 'public');
 const previewArgument = process.argv.find(argument => argument.startsWith('--preview-dir='));
 const previewDir = resolve(root, previewArgument?.slice('--preview-dir='.length) || '../.tools/branding-preview');
-const master = await readFile(resolve(publicDir, 'brand/buxoroavto-mark.svg'), 'utf8');
-const glyph = master.match(/<g transform="translate\(-1\.7 0\)">[\s\S]*<\/g>/)?.[0];
-if (!glyph || master.includes('<text')) throw new Error('Expected the original, font-independent mark.');
+const version = '20261024d-bitim';
+const master = await readFile(resolve(publicDir, 'brand/avto-market-mark.svg'), 'utf8');
+const glyph = master.match(/<g id="bitim-mark"[\s\S]*<\/g>/)?.[0];
+if (!glyph || /<(?:text|script|image|foreignObject)\b/.test(master)) throw new Error('Expected the selected, font-independent Bitim mark.');
+const [originX, originY, artWidth, artHeight] = master.match(/viewBox="([\d.]+) ([\d.]+) ([\d.]+) ([\d.]+)"/).slice(1).map(Number);
+const whiteGlyph = glyph.replaceAll('#5d3bfa', '#fff');
+const whiteMaster = master.replaceAll('#5d3bfa', '#fff');
 
 function svgVariant({ fullBleed = false, maskable = false } = {}) {
-    const art = maskable
-        ? `<g transform="translate(32 32) scale(.82) translate(-32 -32)">${glyph}</g>`
-        : glyph;
+    const width = maskable ? 44 : 56;
+    const scale = width / artWidth;
+    const x = (64 - width) / 2 - originX * scale;
+    const y = (64 - artHeight * scale) / 2 - originY * scale;
+    const art = `<g transform="translate(${x} ${y}) scale(${scale})">${whiteGlyph}</g>`;
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="${fullBleed ? 0 : 15}" fill="#5d3bfa"/>${art}</svg>`;
 }
 
 await mkdir(resolve(publicDir, 'brand'), { recursive: true });
 await mkdir(previewDir, { recursive: true });
-await writeFile(resolve(publicDir, 'favicon.svg'), master);
+const favicon = svgVariant();
+await writeFile(resolve(publicDir, 'favicon.svg'), favicon + '\n');
 
 const browser = await chromium.launch({ headless: true });
 const outputs = [];
@@ -38,7 +45,7 @@ try {
         const base64 = await page.evaluate(async ({ svg, size }) => {
             const image = new Image();
             const ready = new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; });
-            image.src = `data:image/svg+xml;base64,${btoa(svg)}`;
+            image.src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
             await ready;
             const canvas = document.querySelector('canvas');
             canvas.width = size;
@@ -49,7 +56,7 @@ try {
         return Buffer.from(base64, 'base64');
     };
     const pngs = new Map();
-    for (const size of [16, 32, 48, 180, 192, 512]) pngs.set(size, await renderIcon(master, size));
+    for (const size of [16, 32, 48, 180, 192, 512]) pngs.set(size, await renderIcon(favicon, size));
     const iconFiles = [
         ['favicon-16x16.png', pngs.get(16)],
         ['favicon-32x32.png', pngs.get(32)],
@@ -114,18 +121,18 @@ try {
 
         const mark = new Image();
         const loaded = new Promise((resolve, reject) => { mark.onload = resolve; mark.onerror = reject; });
-        mark.src = `data:image/svg+xml;base64,${btoa(svg)}`;
+        mark.src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
         await loaded;
         context.fillStyle = 'rgba(255,255,255,.16)';
         context.beginPath(); context.roundRect(68, 66, 110, 110, 27); context.fill();
-        context.drawImage(mark, 73, 71, 100, 100);
+        context.drawImage(mark, 73, 94, 100, 54);
         context.fillStyle = 'rgba(255,255,255,.82)';
         context.font = '600 22px BuxoroBrand';
-        context.fillText('BUXORO AVTO MARKETPLACE', 202, 131);
+        context.fillText('AVTOMOBIL MARKETPLACE', 202, 131);
 
         context.fillStyle = '#ffffff';
         context.font = '800 100px BuxoroBrand';
-        context.fillText('BuxoroAvto', 68, 322);
+        context.fillText('Avto market', 68, 322);
         context.font = '400 35px BuxoroBrand';
         context.fillStyle = '#f4f1ff';
         context.fillText('Avto, ehtiyot qism va moto — bir joyda', 72, 402);
@@ -135,10 +142,10 @@ try {
         context.fillStyle = 'rgba(255,255,255,.84)';
         context.fillText('platform.buxoroavto.uz', 149, 504);
         return canvas.toDataURL('image/png').split(',')[1];
-    }, { svg: master, font });
+    }, { svg: whiteMaster, font });
     const shareBytes = Buffer.from(share, 'base64');
-    await writeFile(resolve(publicDir, 'brand/buxoroavto-share.png'), shareBytes);
-    outputs.push({ name: 'brand/buxoroavto-share.png', bytes: shareBytes.length, width: 1200, height: 630 });
+    await writeFile(resolve(publicDir, 'brand/avto-market-share.png'), shareBytes);
+    outputs.push({ name: 'brand/avto-market-share.png', bytes: shareBytes.length, width: 1200, height: 630 });
 
     const board = await page.evaluate(async svg => {
         const canvas = document.querySelector('canvas');
@@ -146,12 +153,12 @@ try {
         const context = canvas.getContext('2d');
         context.fillStyle = '#f6f6fa'; context.fillRect(0, 0, 1100, 420);
         context.fillStyle = '#252434'; context.font = '700 26px BuxoroBrand';
-        context.fillText('BuxoroAvto · original road monogram', 40, 52);
+        context.fillText('Avto market · Bitim · selected version 4', 40, 52);
         context.font = '400 15px BuxoroBrand'; context.fillStyle = '#736d80';
         context.fillText('Final geometry · SVG master, actual display sizes', 40, 82);
         const image = new Image();
         const loaded = new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; });
-        image.src = `data:image/svg+xml;base64,${btoa(svg)}`; await loaded;
+        image.src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`; await loaded;
         for (const { x, size } of [{ x: 40, size: 16 }, { x: 215, size: 32 }, { x: 390, size: 41 }, { x: 650, size: 180 }]) {
             const width = size > 100 ? 210 : 150;
             context.fillStyle = '#fff'; context.fillRect(x, 112, width, 245);
@@ -159,18 +166,18 @@ try {
             context.fillStyle = '#252434'; context.font = '700 17px BuxoroBrand'; context.fillText(`${size} px`, x + 18, 338);
         }
         context.fillStyle = '#5d3bfa'; context.font = '700 25px BuxoroBrand';
-        context.fillText('BA / converging road', 40, 390);
+        context.fillText('BITIM / automotive marketplace', 40, 390);
         return canvas.toDataURL('image/png').split(',')[1];
-    }, master);
-    await writeFile(resolve(previewDir, 'buxoroavto-icons-preview.png'), Buffer.from(board, 'base64'));
+    }, favicon);
+    await writeFile(resolve(previewDir, 'bitim-icons-preview.png'), Buffer.from(board, 'base64'));
 } finally {
     await browser.close();
 }
 
 const manifest = {
     id: '/',
-    name: 'BuxoroAvto',
-    short_name: 'BuxoroAvto',
+    name: 'Avto market',
+    short_name: 'Avto market',
     description: 'Avto, ehtiyot qism va moto — bir joyda',
     lang: 'uz',
     start_url: '/',
@@ -179,15 +186,15 @@ const manifest = {
     background_color: '#5d3bfa',
     theme_color: '#5d3bfa',
     icons: [
-        { src: '/icon-192.png?v=20261024b', sizes: '192x192', type: 'image/png', purpose: 'any' },
-        { src: '/icon-512.png?v=20261024b', sizes: '512x512', type: 'image/png', purpose: 'any' },
-        { src: '/icon-maskable-512.png?v=20261024b', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+        { src: '/icon-192.png?v=' + version, sizes: '192x192', type: 'image/png', purpose: 'any' },
+        { src: '/icon-512.png?v=' + version, sizes: '512x512', type: 'image/png', purpose: 'any' },
+        { src: '/icon-maskable-512.png?v=' + version, sizes: '512x512', type: 'image/png', purpose: 'maskable' },
     ],
 };
 await writeFile(resolve(publicDir, 'site.webmanifest'), JSON.stringify(manifest, null, 2) + '\n');
 console.log(JSON.stringify({
-    master: 'public/brand/buxoroavto-mark.svg',
+    master: 'public/brand/avto-market-mark.svg',
     sha256: createHash('sha256').update(master).digest('hex'),
     outputs,
-    preview: resolve(previewDir, 'buxoroavto-icons-preview.png'),
+    preview: resolve(previewDir, 'bitim-icons-preview.png'),
 }, null, 2));

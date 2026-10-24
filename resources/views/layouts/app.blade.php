@@ -9,8 +9,8 @@
             $brandWords = explode(' ', $brandName, 2);
             $pageTitle = html_entity_decode(trim($__env->yieldContent('title', $brandName)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
             $pageDescription = html_entity_decode(trim($__env->yieldContent('description', $brandName.' — avtomobillar, ehtiyot qismlar va moto. Sotuvchilar va xaridorlar uchun yagona marketplace.')), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            $brandVersion = '20261024c';
-            $shareImage = asset('brand/buxoroavto-share.png').'?v='.$brandVersion;
+            $brandVersion = '20261024d-bitim';
+            $shareImage = asset('brand/avto-market-share.png').'?v='.$brandVersion;
         @endphp
         <title>{{ $pageTitle }}</title>
         <meta name="description" content="{{ $pageDescription }}">
@@ -70,7 +70,7 @@
             </div>
             <div class="shell site-header-main">
                 <a href="{{ route('home') }}" class="site-brand" aria-label="{{ $brandName }} bosh sahifa">
-                    <img class="site-brand-mark" src="{{ asset('brand/buxoroavto-mark.svg') }}?v={{ $brandVersion }}" width="41" height="41" alt="" aria-hidden="true" decoding="async">
+                    <img class="site-brand-mark" src="{{ asset('brand/avto-market-mark.svg') }}?v={{ $brandVersion }}" width="58" height="36" alt="" aria-hidden="true" decoding="async">
                     <span class="site-brand-name">{{ $brandWords[0] }}@isset($brandWords[1])<span> {{ $brandWords[1] }}</span>@endisset</span>
                 </a>
                 <a href="{{ route('listings') }}" class="site-catalog-button">
@@ -103,7 +103,7 @@
         </header>
         @if ($errors->any() && !$__env->hasSection('local-form-errors'))<div role="alert" class="shell pt-5"><div class="alert alert-error"><ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div></div>@endif
         @yield('content')
-        <footer class="site-footer"><div class="shell site-footer-inner"><a href="{{ route('home') }}" class="site-footer-brand"><img src="{{ asset('brand/buxoroavto-mark.svg') }}?v={{ $brandVersion }}" width="28" height="28" alt="" decoding="async">{{ $brandWords[0] }}@isset($brandWords[1])<span>&nbsp;{{ $brandWords[1] }}</span>@endisset<small>© {{ now()->year }}</small></a><p>Avtomobillar, ehtiyot qismlar va moto — hammasi bir joyda.</p><a href="{{ route('cabinet.listing.create') }}">E’lon joylashtirish <span aria-hidden="true">↗</span></a></div></footer>
+        <footer class="site-footer"><div class="shell site-footer-inner"><a href="{{ route('home') }}" class="site-footer-brand"><img src="{{ asset('brand/avto-market-mark.svg') }}?v={{ $brandVersion }}" width="40" height="24" alt="" decoding="async">{{ $brandWords[0] }}@isset($brandWords[1])<span>&nbsp;{{ $brandWords[1] }}</span>@endisset<small>© {{ now()->year }}</small></a><p>Avtomobillar, ehtiyot qismlar va moto — hammasi bir joyda.</p><a href="{{ route('cabinet.listing.create') }}">E’lon joylashtirish <span aria-hidden="true">↗</span></a></div></footer>
         <dialog id="site-help-dialog" class="site-help-dialog" x-ref="helpDialog" aria-labelledby="site-help-title"><div class="site-help-heading"><h2 id="site-help-title">{{ $brandName }} yordam</h2><form method="dialog"><button type="submit" aria-label="Yordam oynasini yopish">×</button></form></div><div class="site-help-content"><h3>Kerakli taklifni qanday topaman?</h3><p>Qidiruvga model yoki detal nomini yozing. Katalogda yo‘nalish, holat, shahar va narx bo‘yicha filtrlang.</p><h3>E’lonni qanday joylashtiraman?</h3><p>Akkauntingizga kiring, “E’lon berish” tugmasini bosing va ma’lumotlarni to‘ldiring. Qoralamani saqlash yoki moderatsiyaga yuborish mumkin.</p><h3>Saqlangan e’lonlar qayerda?</h3><p>E’londagi yurak belgisini bosing. Saqlanganlar shu brauzerda turadi.</p><div class="site-help-actions"><a href="{{ route('listings') }}" class="btn btn-brand">Katalogni ochish</a><a href="{{ route('cabinet') }}" class="btn btn-ghost">Kabinetga o‘tish</a></div></div></dialog>
         <dialog id="saved-listings" class="site-saved-dialog" data-saved-panel hidden aria-labelledby="saved-listings-title" aria-describedby="saved-listings-description">
             <div class="site-saved-heading"><div><h2 id="saved-listings-title">Saqlangan e’lonlar</h2><p id="saved-listings-description">Shu brauzerda saqlangan e’lonlar.</p></div><button type="button" data-saved-close aria-label="Saqlanganlar oynasini yopish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>

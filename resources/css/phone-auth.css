@@ -1,8 +1,8 @@
 .phone-auth-page { padding-top:42px; padding-bottom:40px; color:#17122e; }
 .phone-auth-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,440px); gap:76px; align-items:center; width:min(100%,1050px); margin-inline:auto; }
 .phone-auth-benefits { position:relative; isolation:isolate; display:flex; flex-direction:column; gap:42px; min-height:520px; padding:38px 34px; overflow:hidden; border-radius:24px; background:#f0ebff; }
-.phone-auth-brand { display:inline-flex; align-items:center; gap:12px; width:fit-content; font-size:24px; font-weight:750; letter-spacing:-.8px; }
-.phone-auth-brand img { width:48px; height:48px; flex:none; }
+.phone-auth-brand { display:inline-flex; align-items:center; gap:12px; width:fit-content; font-size:24px; font-weight:800; letter-spacing:-.8px; }
+.phone-auth-brand img { display:block; width:64px; height:40px; flex:none; object-fit:contain; }
 .phone-auth-brand strong { font-weight:400; }
 .phone-auth-eyebrow { display:block; margin-bottom:14px; color:#68558d; font-size:10px; font-weight:750; letter-spacing:1.6px; }
 .phone-auth-benefits h2 { font-size:43px; line-height:1.12; font-weight:800; letter-spacing:-1.4px; }
