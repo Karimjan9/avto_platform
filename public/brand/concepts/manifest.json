@@ -1,87 +1,89 @@
 {
   "brand": "Avto market",
   "color": "#5d3bfa",
-  "status": "Takliflar — faol logotip o‘zgarmagan",
+  "version": "auto-20261024",
+  "theme": "Avtomobil va avto savdo",
+  "status": "Takliflar — asosiy logo tanlovdan keyin yangilanadi",
   "concepts": [
     {
       "id": 1,
-      "file": "01-tutash.svg",
-      "name": "Tutash",
-      "meaning": "Yo‘llar uchrashuvi: xaridor, sotuvchi va uch yo‘nalish o‘zaro bog‘lanadi.",
-      "short": "Bir joyda uchrashadigan yo‘llar.",
-      "svg": "01-tutash.svg",
+      "name": "Old ko‘rinish",
+      "short": "Avtomobilni bir qarashda taniysiz.",
+      "meaning": "Keng old oyna, yoritgichlar va bamper avtomobil bozorini bevosita ifodalaydi.",
+      "file": "01-avto-nigoh.svg",
+      "svg": "01-avto-nigoh.svg",
       "viewBox": "0 0 64 64",
-      "kind": "Original harfsiz vektor belgi"
+      "kind": "Harfsiz avtomobil belgisi"
     },
     {
       "id": 2,
-      "file": "02-aylanma.svg",
-      "name": "Aylanma",
-      "meaning": "Aylanma marshrutdagi ochiq chiqish — bir bozor ichida yangi imkoniyatni topish.",
-      "short": "Har safar yangi imkoniyat.",
-      "svg": "02-aylanma.svg",
+      "name": "Rul",
+      "short": "Boshqaruv sizning qo‘lingizda.",
+      "meaning": "Uch spitsali avtomobil ruli haydash va o‘z avtomobilini tanlashni anglatadi.",
+      "file": "02-rul.svg",
+      "svg": "02-rul.svg",
       "viewBox": "0 0 64 64",
-      "kind": "Original harfsiz vektor belgi"
+      "kind": "Harfsiz avtomobil belgisi"
     },
     {
       "id": 3,
-      "file": "03-almashuv.svg",
-      "name": "Almashuv",
-      "meaning": "Qarama-qarshi ikki oqim — sotish va xarid qilishning yagona harakati.",
-      "short": "Sotuvchi va xaridor o‘rtasidagi oqim.",
-      "svg": "03-almashuv.svg",
+      "name": "Disk",
+      "short": "Avtomobilning kuchli detali.",
+      "meaning": "Qalin shina konturi va besh spitsali yengil qotishma disk avtomobil hamda ehtiyot qismlarni bildiradi.",
+      "file": "03-disk.svg",
+      "svg": "03-disk.svg",
       "viewBox": "0 0 64 64",
-      "kind": "Original harfsiz vektor belgi"
+      "kind": "Harfsiz avtomobil belgisi"
     },
     {
       "id": 4,
-      "file": "04-topilma.svg",
-      "name": "Topilma",
-      "meaning": "To‘rt ochiq burchak ichidagi topilma — kerakli mahsulotni ajratib topish.",
-      "short": "Kerakli taklif diqqat markazida.",
-      "svg": "04-topilma.svg",
+      "name": "Kupe",
+      "short": "Past tom. Dadil harakat.",
+      "meaning": "Ikki g‘ildirakli yon profil, past tom va qisqa tezlik chiziqlari avtomobilning o‘ziga xos qiyofasini beradi.",
+      "file": "04-harakat.svg",
+      "svg": "04-harakat.svg",
       "viewBox": "0 0 64 64",
-      "kind": "Original harfsiz vektor belgi"
+      "kind": "Harfsiz avtomobil belgisi"
     },
     {
       "id": 5,
-      "file": "05-yolak.svg",
-      "name": "Yo‘lak",
-      "meaning": "Parallel yo‘llar birga oldinga boradi — avtomobil, ehtiyot qism va moto uchun umumiy platforma.",
-      "short": "Uch yo‘nalish, bitta harakat.",
-      "svg": "05-yolak.svg",
+      "name": "Avto qalqon",
+      "short": "Ishonch va avtomobil",
+      "meaning": "Old tomondan ko‘rinadigan avtomobil himoya qalqoni bilan birlashgan. Avtomobil savdosidagi ishonchni ifodalaydi.",
+      "file": "05-ishonch.svg",
+      "svg": "05-ishonch.svg",
       "viewBox": "0 0 64 64",
-      "kind": "Original harfsiz vektor belgi"
+      "kind": "Harfsiz avtomobil belgisi"
     },
     {
       "id": 6,
-      "file": "06-koprik.svg",
-      "name": "Ko‘prik",
-      "meaning": "Ikki mustahkam tugun orasidagi ko‘prik — taklif va talabni bog‘laydi.",
-      "short": "Taklif va talabni bog‘laydi.",
-      "svg": "06-koprik.svg",
+      "name": "Avto mexanika",
+      "short": "Mashina va ehtiyot qism",
+      "meaning": "Yon tomondan ko‘rinadigan avtomobil tishli halqa ichida. Avtomobillar va ehtiyot qismlar bir marketplace’da ekanini bildiradi.",
+      "file": "06-avto-detal.svg",
+      "svg": "06-avto-detal.svg",
       "viewBox": "0 0 64 64",
-      "kind": "Original harfsiz vektor belgi"
+      "kind": "Harfsiz avtomobil belgisi"
     },
     {
       "id": 7,
-      "file": "07-uch-oqim.svg",
-      "name": "Uch oqim",
-      "meaning": "Uch alohida bo‘lak umumiy markazga yo‘naladi — bozorning uch asosiy toifasi.",
-      "short": "Avtomobil. Ehtiyot qism. Moto.",
-      "svg": "07-uch-oqim.svg",
+      "name": "Avto taklif",
+      "short": "Avtomobil va narx yorlig‘i",
+      "meaning": "Avtomobil silueti narx yorlig‘i bilan tutashgan. Belgining o‘ziyoq mashina sotish va sotib olish maydonini tushuntiradi.",
+      "file": "07-avto-savdo.svg",
+      "svg": "07-avto-savdo.svg",
       "viewBox": "0 0 64 64",
-      "kind": "Original harfsiz vektor belgi"
+      "kind": "Harfsiz avtomobil belgisi"
     },
     {
       "id": 8,
-      "file": "08-manzil.svg",
-      "name": "Manzil",
-      "meaning": "Ajralib turadigan marshrut belgisi — izlashdan mos taklifgacha bo‘lgan yo‘l.",
-      "short": "Izlashdan mos taklifgacha.",
-      "svg": "08-manzil.svg",
+      "name": "Avto yo‘l",
+      "short": "Avtomobil va ochiq yo‘l",
+      "meaning": "Aniq avtomobil old ko‘rinishi istiqbolga ochilgan yo‘l ustida. Tanlangan avtomobil bilan yangi yo‘l boshlanishini anglatadi.",
+      "file": "08-avto-yol.svg",
+      "svg": "08-avto-yol.svg",
       "viewBox": "0 0 64 64",
-      "kind": "Original harfsiz vektor belgi"
+      "kind": "Harfsiz avtomobil belgisi"
     }
   ]
 }
