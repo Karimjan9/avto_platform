@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Mening kabinetim — BuxoroAvto')
+@section('title', 'Mening kabinetim — '.config('brand.name'))
 @section('robots', 'noindex,nofollow')
 @section('content')
 @php

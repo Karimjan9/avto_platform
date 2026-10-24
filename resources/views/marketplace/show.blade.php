@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $listing->title.' — BuxoroAvto')
+@section('title', $listing->title.' — '.config('brand.name'))
 @section('description', Str::limit($listing->description, 155))
 @if ($preview ?? false) @section('robots', 'noindex,nofollow') @endif
 @section('content')

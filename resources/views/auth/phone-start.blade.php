@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', (auth()->check() ? 'Telefonni tasdiqlash' : 'Telefon orqali kirish').' — BuxoroAvto')
+@section('title', (auth()->check() ? 'Telefonni tasdiqlash' : 'Telefon orqali kirish').' — '.config('brand.name'))
 @section('robots', 'noindex,nofollow')
 @section('local-form-errors', '1')
 @section('content')

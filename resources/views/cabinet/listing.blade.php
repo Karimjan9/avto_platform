@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', ($listing ? 'E’lonni tahrirlash' : 'Yangi e’lon').' — BuxoroAvto')
+@section('title', ($listing ? 'E’lonni tahrirlash' : 'Yangi e’lon').' — '.config('brand.name'))
 @section('robots', 'noindex,nofollow')
 @section('content')
 @php

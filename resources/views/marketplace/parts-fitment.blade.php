@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $model->make->name.' '.$model->name.' uchun mos detallar — BuxoroAvto')
+@section('title', $model->make->name.' '.$model->name.' uchun mos detallar — '.config('brand.name'))
 @section('content')
 <main id="main" class="shell py-8 sm:py-12">
     <a href="{{ route('home') }}" class="text-sm font-semibold text-brand">← Transportni o‘zgartirish</a>

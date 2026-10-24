@@ -32,9 +32,9 @@ class MarketplaceWebTest extends TestCase
         $document->loadHTML('<?xml encoding="UTF-8">'.$response->getContent(), LIBXML_NOERROR | LIBXML_NOWARNING);
         $xpath = new \DOMXPath($document);
         $this->assertSame(0, $xpath->query('//script[@id="untrusted-title" or @id="untrusted-description"]')->length);
-        $this->assertSame($title.' — BuxoroAvto', $document->getElementsByTagName('title')->item(0)->textContent);
+        $this->assertSame($title.' — '.config('brand.name'), $document->getElementsByTagName('title')->item(0)->textContent);
         foreach (['og:title', 'og:description'] as $property) {
-            $this->assertSame($property === 'og:title' ? $title.' — BuxoroAvto' : $description, $xpath->query('//meta[@property="'.$property.'"]')->item(0)->getAttribute('content'));
+            $this->assertSame($property === 'og:title' ? $title.' — '.config('brand.name') : $description, $xpath->query('//meta[@property="'.$property.'"]')->item(0)->getAttribute('content'));
         }
     }
 

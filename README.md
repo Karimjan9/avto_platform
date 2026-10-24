@@ -2,6 +2,8 @@
 
 Avto platformasining backend va Blade interfeysi. Vizitka saytidan alohida Laravel ilovasi va Git repozitoriysi.
 
+Hozirgi ochiq nom `Avto market`; `MARKETPLACE_BRAND_NAME` (`config/brand.php`) orqali o'zgartiriladi. Asosiy bo'limlar uchta: avtomobillar, ehtiyot qismlar va moto. Arenda avtomobillar ichidagi taklif turidir. Harfsiz belgi variantlari `/brand/concepts/board.html` da ko'rsatiladi; yakuniy belgi tanlanguncha faol ikonka alohida saqlanadi.
+
 Marketplace backend: mashinalar (yangi/bu, sotuv/arenda), avtosalonlar, zapchastlar va do'konlar, moto (velosipedsiz). Flutter uchun versiyalangan API, tokenli kirish, e'lonlar, rasmlar va moderatsiya mavjud. API shartnomasi va misollar: [docs/api.md](docs/api.md).
 
 Mashina, elektromobil, arenda, shina, fara va elektr moto uchun dinamik forma sxemasi hamda tekshirish qoidalari bitta servisdan beriladi: `GET /api/v1/catalog/form`. Motosalon, alohida kelishuv shartlari, ombor qoldig'i va texnik filtrlar mavjud. Parametrlar va payload misollari: [docs/product-profiles.md](docs/product-profiles.md).

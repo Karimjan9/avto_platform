@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Avtomobillar, ehtiyot qismlar va moto — BuxoroAvto')
+@section('title', 'Avtomobillar, ehtiyot qismlar va moto — '.config('brand.name'))
 @section('content')
 @php
     $isHome = request()->routeIs('home') && empty($filters);
@@ -10,6 +10,17 @@
         @include('marketplace.home-hero')
     @else
         <div class="market-page-heading"><div><a href="{{ route('home') }}" class="market-breadcrumb">Bosh sahifa <span aria-hidden="true">/</span></a><h1>{{ $sectionTitle }}</h1></div><span class="market-page-note">O‘zingizga mos taklifni toping</span></div>
+        @if (($filters['section'] ?? '') === 'cars')
+            @php
+                $carOfferFilters = \Illuminate\Support\Arr::except($filters, ['offer_type', 'page']);
+                $carOfferTabs = [
+                    ['label' => 'Barchasi', 'type' => '', 'filters' => \Illuminate\Support\Arr::except($carOfferFilters, ['driver_option'])],
+                    ['label' => 'Sotuv', 'type' => 'sale', 'filters' => [...\Illuminate\Support\Arr::except($carOfferFilters, ['driver_option']), 'offer_type' => 'sale']],
+                    ['label' => 'Arenda', 'type' => 'rent', 'filters' => [...$carOfferFilters, 'offer_type' => 'rent']],
+                ];
+            @endphp
+            <nav class="market-car-offer-nav" aria-label="Avtomobil takliflari">@foreach ($carOfferTabs as $tab)<a href="{{ route('listings', $tab['filters']) }}" class="{{ ($filters['offer_type'] ?? '') === $tab['type'] ? 'is-active' : '' }}" @if (($filters['offer_type'] ?? '') === $tab['type']) aria-current="page" @endif>{{ $tab['label'] }}</a>@endforeach</nav>
+        @endif
         @include('marketplace.filters')
     @endif
     <section class="market-recommendations" id="elonlar" aria-labelledby="listings-heading">

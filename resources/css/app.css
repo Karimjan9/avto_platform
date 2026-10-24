@@ -134,7 +134,7 @@
 .site-post-button:hover { background: #b83e08; }
 .site-post-button [data-icon] { width: 18px; height: 18px; }
 .site-menu-toggle { display: none; align-items: center; justify-content: center; width: 36px; height: 40px; flex-shrink: 0; border: 1px solid var(--market-border); border-radius: 9px; background: white; color: #494655; }
-.site-category-nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; padding-bottom: 0; }
+.site-category-nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; padding-bottom: 0; }
 .site-category-link { display: flex; align-items: center; justify-content: center; gap: 17px; height: 40px; min-height: 40px; padding: 6px 16px; border: 1px solid transparent; border-radius: 10px; background: #f3f4f9; color: #17132b; font-size: 14px; font-weight: 600; white-space: nowrap; transition: background .15s, border-color .15s; }
 .site-category-link [data-icon], .site-category-link > svg { width: 26px; height: 26px; color: var(--market-purple); }
 .site-category-link:hover, .site-category-link.is-active { background: #f0edff; border-color: #e6e0ff; color: var(--market-purple); }
@@ -235,10 +235,13 @@
     .site-search { height: 42px; border-radius: 8px; }
     .site-search input { padding-left: 7px; font-size: 10px; }
     .site-search button { width: 32px; height: 32px; }
-    .site-category-nav { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 0; }
+    .site-category-nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding-bottom: 0; }
     .site-category-nav::-webkit-scrollbar { display: none; }
-    .site-category-link { min-width: 130px; min-height: 43px; gap: 8px; padding: 10px 14px; font-size: 11px; border-radius: 8px; }
-    .site-category-link [data-icon], .site-category-link > svg { width: 20px; height: 20px; }
+    .site-category-link { min-width: 0; min-height: 43px; gap: 5px; padding: 6px 4px; font-size: 11px; border-radius: 8px; white-space: normal; line-height: 1.2; }
+    .site-category-link [data-icon], .site-category-link > svg { width: 18px; height: 18px; flex: none; }
     .site-footer-inner { align-items: flex-start; flex-direction: column; gap: 14px; }
     .site-saved-dialog { inset: 0; width: 100%; height: 100dvh; border: 0; border-radius: 0; }
+}
+@media (max-width: 379px) {
+    .site-category-link { flex-direction: column; gap: 3px; height: 52px; font-size: 10px; }
 }

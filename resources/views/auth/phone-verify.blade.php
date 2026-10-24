@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'SMS kodni tasdiqlash — BuxoroAvto')
+@section('title', 'SMS kodni tasdiqlash — '.config('brand.name'))
 @section('robots', 'noindex,nofollow')
 @section('local-form-errors', '1')
 @section('content')
@@ -41,7 +41,7 @@
             <div class="phone-auth-resend"><span>SMS kelmadimi?</span><form method="POST" action="{{ route('phone.resend') }}" @submit="sending = true" data-phone-resend>@csrf<button type="submit" :disabled="!smsEnabled || cooldown > 0 || sending" @disabled(! $smsAvailable || $cooldownSeconds > 0)><span x-show="sending" x-cloak>Yuborilmoqda…</span><span x-show="!sending &amp;&amp; cooldown > 0" @if ($cooldownSeconds === 0) x-cloak @endif>Qayta yuborish (<span role="timer" aria-live="off" x-text="format(cooldown)" data-resend-countdown>{{ $formatCountdown($cooldownSeconds) }}</span>)</span><span x-show="!sending &amp;&amp; cooldown === 0" @if ($cooldownSeconds > 0) x-cloak @endif>Kodni qayta yuborish</span></button></form></div>
             <p class="phone-auth-send-policy">Bir soatda {{ $maxSends }} ta kod so‘rash mumkin.<span>Yuborildi: <strong data-sms-count>{{ $sentCount }}/{{ $maxSends }}</strong></span></p>
             <a href="{{ route('phone.start') }}" class="phone-auth-back">← Telefon raqamini o‘zgartirish</a>
-            <p class="phone-auth-note">Kodni hech kimga bermang. BuxoroAvto xodimlari sizdan kirish kodingizni so‘ramaydi.</p>
+            <p class="phone-auth-note">Kodni hech kimga bermang. {{ config('brand.name') }} xodimlari sizdan kirish kodingizni so‘ramaydi.</p>
         </section>
     </div>
 </main>

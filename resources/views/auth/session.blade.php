@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', ($register ? 'Ro‘yxatdan o‘tish' : 'Kirish').' — BuxoroAvto')
+@section('title', ($register ? 'Ro‘yxatdan o‘tish' : 'Kirish').' — '.config('brand.name'))
 @section('robots', 'noindex,nofollow')
 @section('content')
 <main id="main" class="shell py-12"><section class="panel mx-auto max-w-md p-7 sm:p-9"><p class="eyebrow">SHAXSIY KABINET</p><h1 class="mt-3 text-3xl font-bold">{{ $register ? 'Xush kelibsiz' : 'Yana ko‘rishganimizdan xursandmiz' }}</h1><p class="muted mt-3">E’lonlaringiz va biznesingizni bir joydan boshqaring.</p>

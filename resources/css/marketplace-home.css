@@ -61,6 +61,10 @@
 .market-breadcrumb { font-size: 12px; color: #706a83; display: inline-flex; gap: 10px; align-items: center; margin-bottom: 6px; }
 .market-page-heading h1 { font-size: 34px; font-weight: 800; letter-spacing: -.04em; line-height: 1.2; }
 .market-page-note { font-size: 13px; color: #706a83; }
+.market-car-offer-nav { display: inline-flex; max-width: 100%; gap: 4px; margin: -4px 0 18px; padding: 4px; border: 1px solid #e8e3f3; border-radius: 11px; background: #f6f4fb; }
+.market-car-offer-nav a { display: inline-flex; align-items: center; justify-content: center; min-height: 38px; padding: 8px 20px; border: 1px solid transparent; border-radius: 8px; color: #5e5572; font-size: 13px; font-weight: 600; line-height: 20px; }
+.market-car-offer-nav a:hover { background: #eee9ff; color: #5d3bfa; }
+.market-car-offer-nav a.is-active { border-color: #e3dbfb; background: white; color: #5d3bfa; box-shadow: 0 1px 3px #24104d0a; }
 .market-filter-panel { padding: 22px; }
 .market-filter-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
 .market-filter-query { grid-column: span 2; }

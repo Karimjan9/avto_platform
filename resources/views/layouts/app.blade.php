@@ -5,17 +5,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         @php
-            $pageTitle = html_entity_decode(trim($__env->yieldContent('title', config('app.name'))), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            $pageDescription = html_entity_decode(trim($__env->yieldContent('description', 'BuxoroAvto — avtomobillar, ehtiyot qismlar va moto. Sotuvchilar va xaridorlar uchun yagona marketplace.')), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            $brandVersion = '20261024b';
+            $brandName = config('brand.name');
+            $brandWords = explode(' ', $brandName, 2);
+            $pageTitle = html_entity_decode(trim($__env->yieldContent('title', $brandName)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $pageDescription = html_entity_decode(trim($__env->yieldContent('description', $brandName.' — avtomobillar, ehtiyot qismlar va moto. Sotuvchilar va xaridorlar uchun yagona marketplace.')), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $brandVersion = '20261024c';
             $shareImage = asset('brand/buxoroavto-share.png').'?v='.$brandVersion;
         @endphp
         <title>{{ $pageTitle }}</title>
         <meta name="description" content="{{ $pageDescription }}">
         @hasSection('robots')<meta name="robots" content="@yield('robots')">@endif
         <meta name="theme-color" content="#5d3bfa">
-        <meta name="application-name" content="BuxoroAvto">
-        <meta name="apple-mobile-web-app-title" content="BuxoroAvto">
+        <meta name="application-name" content="{{ $brandName }}">
+        <meta name="apple-mobile-web-app-title" content="{{ $brandName }}">
         <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="{{ asset('favicon.ico') }}?v={{ $brandVersion }}">
         <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}?v={{ $brandVersion }}">
         <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}?v={{ $brandVersion }}">
@@ -23,7 +25,7 @@
         <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}?v={{ $brandVersion }}">
         <link rel="manifest" href="{{ asset('site.webmanifest') }}?v={{ $brandVersion }}">
         <meta property="og:type" content="website">
-        <meta property="og:site_name" content="BuxoroAvto">
+        <meta property="og:site_name" content="{{ $brandName }}">
         <meta property="og:locale" content="uz_UZ">
         <meta property="og:title" content="{{ $pageTitle }}">
         <meta property="og:description" content="{{ $pageDescription }}">
@@ -31,12 +33,12 @@
         <meta property="og:image" content="{{ $shareImage }}">
         <meta property="og:image:width" content="1200">
         <meta property="og:image:height" content="630">
-        <meta property="og:image:alt" content="BuxoroAvto — avto, ehtiyot qism va moto bir joyda">
+        <meta property="og:image:alt" content="{{ $brandName }} — avto, ehtiyot qism va moto bir joyda">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="{{ $pageTitle }}">
         <meta name="twitter:description" content="{{ $pageDescription }}">
         <meta name="twitter:image" content="{{ $shareImage }}">
-        <meta name="twitter:image:alt" content="BuxoroAvto — avto, ehtiyot qism va moto bir joyda">
+        <meta name="twitter:image:alt" content="{{ $brandName }} — avto, ehtiyot qism va moto bir joyda">
         <link rel="preload" href="{{ asset('fonts/roboto-latin-variable.woff2') }}" as="font" type="font/woff2" crossorigin>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @stack('styles')
@@ -67,9 +69,9 @@
                 </div>
             </div>
             <div class="shell site-header-main">
-                <a href="{{ route('home') }}" class="site-brand" aria-label="BuxoroAvto bosh sahifa">
+                <a href="{{ route('home') }}" class="site-brand" aria-label="{{ $brandName }} bosh sahifa">
                     <img class="site-brand-mark" src="{{ asset('brand/buxoroavto-mark.svg') }}?v={{ $brandVersion }}" width="41" height="41" alt="" aria-hidden="true" decoding="async">
-                    <span class="site-brand-name">Buxoro<span>Avto</span></span>
+                    <span class="site-brand-name">{{ $brandWords[0] }}@isset($brandWords[1])<span> {{ $brandWords[1] }}</span>@endisset</span>
                 </a>
                 <a href="{{ route('listings') }}" class="site-catalog-button">
                     <i data-icon="menu" aria-hidden="true"></i>
@@ -88,23 +90,21 @@
                 <button type="button" class="site-menu-toggle" @click="mobileMenu = !mobileMenu" :aria-expanded="mobileMenu" aria-controls="mobile-menu" aria-label="Menyuni ochish"><i data-icon="menu" aria-hidden="true"></i></button>
             </div>
             @php
-                $siteRental = request()->query('offer_type') === 'rent';
                 $siteSection = request()->query('section');
             @endphp
             <nav class="shell site-category-nav" aria-label="Asosiy menyu">
-                <a class="site-category-link {{ $siteSection === 'cars' && !$siteRental ? 'is-active' : '' }}" href="{{ route('listings', ['section' => 'cars']) }}" @if ($siteSection === 'cars' && !$siteRental) aria-current="page" @endif><i data-icon="car-front" aria-hidden="true"></i><span>Avtomobillar</span></a>
+                <a class="site-category-link {{ $siteSection === 'cars' ? 'is-active' : '' }}" href="{{ route('listings', ['section' => 'cars']) }}" @if ($siteSection === 'cars') aria-current="page" @endif><i data-icon="car-front" aria-hidden="true"></i><span>Avtomobillar</span></a>
                 <a class="site-category-link {{ $siteSection === 'parts' ? 'is-active' : '' }}" href="{{ route('listings', ['section' => 'parts']) }}" @if ($siteSection === 'parts') aria-current="page" @endif><i data-icon="wrench" aria-hidden="true"></i><span>Ehtiyot qismlar</span></a>
                 <a class="site-category-link {{ $siteSection === 'moto' ? 'is-active' : '' }}" href="{{ route('listings', ['section' => 'moto']) }}" @if ($siteSection === 'moto') aria-current="page" @endif><i data-icon="bike" aria-hidden="true"></i><span>Moto</span></a>
-                <a class="site-category-link {{ $siteRental ? 'is-active' : '' }}" href="{{ route('listings', ['section' => 'cars', 'offer_type' => 'rent']) }}" @if ($siteRental) aria-current="page" @endif><i data-icon="car-front" aria-hidden="true"></i><span>Arenda</span></a>
             </nav>
             <nav id="mobile-menu" x-cloak x-show="mobileMenu" class="site-mobile-menu" aria-label="Mobil menyu">
-                <div class="shell site-mobile-menu-inner"><a href="{{ route('listings', ['section' => 'cars']) }}">Avtomobillar</a><a href="{{ route('listings', ['section' => 'parts']) }}">Ehtiyot qismlar</a><a href="{{ route('listings', ['section' => 'moto']) }}">Moto</a><a href="{{ route('listings', ['section' => 'cars', 'offer_type' => 'rent']) }}">Avto arenda</a><button type="button" data-saved-open aria-controls="saved-listings" aria-expanded="false" aria-haspopup="dialog">Saqlangan e’lonlar</button><a href="{{ route('cabinet') }}">Kabinet</a><button type="button" @click="$refs.helpDialog.showModal()" aria-haspopup="dialog" aria-controls="site-help-dialog">Yordam</button>@guest<a href="{{ route('login') }}">Kirish / Ro‘yxatdan o‘tish</a>@endguest</div>
+                <div class="shell site-mobile-menu-inner"><a href="{{ route('listings', ['section' => 'cars']) }}">Avtomobillar</a><a href="{{ route('listings', ['section' => 'parts']) }}">Ehtiyot qismlar</a><a href="{{ route('listings', ['section' => 'moto']) }}">Moto</a><button type="button" data-saved-open aria-controls="saved-listings" aria-expanded="false" aria-haspopup="dialog">Saqlangan e’lonlar</button><a href="{{ route('cabinet') }}">Kabinet</a><button type="button" @click="$refs.helpDialog.showModal()" aria-haspopup="dialog" aria-controls="site-help-dialog">Yordam</button>@guest<a href="{{ route('login') }}">Kirish / Ro‘yxatdan o‘tish</a>@endguest</div>
             </nav>
         </header>
         @if ($errors->any() && !$__env->hasSection('local-form-errors'))<div role="alert" class="shell pt-5"><div class="alert alert-error"><ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div></div>@endif
         @yield('content')
-        <footer class="site-footer"><div class="shell site-footer-inner"><a href="{{ route('home') }}" class="site-footer-brand"><img src="{{ asset('brand/buxoroavto-mark.svg') }}?v={{ $brandVersion }}" width="28" height="28" alt="" decoding="async">Buxoro<span>Avto</span><small>© {{ now()->year }}</small></a><p>Avtomobillar, ehtiyot qismlar va moto — hammasi bir joyda.</p><a href="{{ route('cabinet.listing.create') }}">E’lon joylashtirish <span aria-hidden="true">↗</span></a></div></footer>
-        <dialog id="site-help-dialog" class="site-help-dialog" x-ref="helpDialog" aria-labelledby="site-help-title"><div class="site-help-heading"><h2 id="site-help-title">BuxoroAvto yordam</h2><form method="dialog"><button type="submit" aria-label="Yordam oynasini yopish">×</button></form></div><div class="site-help-content"><h3>Kerakli taklifni qanday topaman?</h3><p>Qidiruvga model yoki detal nomini yozing. Katalogda yo‘nalish, holat, shahar va narx bo‘yicha filtrlang.</p><h3>E’lonni qanday joylashtiraman?</h3><p>Akkauntingizga kiring, “E’lon berish” tugmasini bosing va ma’lumotlarni to‘ldiring. Qoralamani saqlash yoki moderatsiyaga yuborish mumkin.</p><h3>Saqlangan e’lonlar qayerda?</h3><p>E’londagi yurak belgisini bosing. Saqlanganlar shu brauzerda turadi.</p><div class="site-help-actions"><a href="{{ route('listings') }}" class="btn btn-brand">Katalogni ochish</a><a href="{{ route('cabinet') }}" class="btn btn-ghost">Kabinetga o‘tish</a></div></div></dialog>
+        <footer class="site-footer"><div class="shell site-footer-inner"><a href="{{ route('home') }}" class="site-footer-brand"><img src="{{ asset('brand/buxoroavto-mark.svg') }}?v={{ $brandVersion }}" width="28" height="28" alt="" decoding="async">{{ $brandWords[0] }}@isset($brandWords[1])<span>&nbsp;{{ $brandWords[1] }}</span>@endisset<small>© {{ now()->year }}</small></a><p>Avtomobillar, ehtiyot qismlar va moto — hammasi bir joyda.</p><a href="{{ route('cabinet.listing.create') }}">E’lon joylashtirish <span aria-hidden="true">↗</span></a></div></footer>
+        <dialog id="site-help-dialog" class="site-help-dialog" x-ref="helpDialog" aria-labelledby="site-help-title"><div class="site-help-heading"><h2 id="site-help-title">{{ $brandName }} yordam</h2><form method="dialog"><button type="submit" aria-label="Yordam oynasini yopish">×</button></form></div><div class="site-help-content"><h3>Kerakli taklifni qanday topaman?</h3><p>Qidiruvga model yoki detal nomini yozing. Katalogda yo‘nalish, holat, shahar va narx bo‘yicha filtrlang.</p><h3>E’lonni qanday joylashtiraman?</h3><p>Akkauntingizga kiring, “E’lon berish” tugmasini bosing va ma’lumotlarni to‘ldiring. Qoralamani saqlash yoki moderatsiyaga yuborish mumkin.</p><h3>Saqlangan e’lonlar qayerda?</h3><p>E’londagi yurak belgisini bosing. Saqlanganlar shu brauzerda turadi.</p><div class="site-help-actions"><a href="{{ route('listings') }}" class="btn btn-brand">Katalogni ochish</a><a href="{{ route('cabinet') }}" class="btn btn-ghost">Kabinetga o‘tish</a></div></div></dialog>
         <dialog id="saved-listings" class="site-saved-dialog" data-saved-panel hidden aria-labelledby="saved-listings-title" aria-describedby="saved-listings-description">
             <div class="site-saved-heading"><div><h2 id="saved-listings-title">Saqlangan e’lonlar</h2><p id="saved-listings-description">Shu brauzerda saqlangan e’lonlar.</p></div><button type="button" data-saved-close aria-label="Saqlanganlar oynasini yopish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
             <div class="site-saved-content" data-saved-content><div class="site-saved-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg><h3>Hozircha saqlangan e’lon yo‘q</h3><p>Yoqtirgan e’loningizdagi yurak belgisini bosing. Uni shu yerdan topasiz.</p><a href="{{ route('listings') }}" class="btn btn-brand">E’lonlarni ko‘rish</a></div></div>

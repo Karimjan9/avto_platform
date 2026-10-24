@@ -1,5 +1,5 @@
 <div class="market-hero-grid">
-    <section class="market-hero" data-market-hero data-hero-active="0" aria-label="BuxoroAvto takliflari">
+    <section class="market-hero" data-market-hero data-hero-active="0" aria-label="{{ config('brand.name') }} takliflari">
         <img class="market-hero-reference" src="{{ asset('images/marketplace/reference-hero.webp') }}" width="1017" height="297" alt="" aria-hidden="true" fetchpriority="high" decoding="async">
         <img class="market-hero-image" src="{{ asset('images/marketplace/bukhara-blue-onix.webp') }}" width="2172" height="724" alt="Buxoroning tarixiy me’morchiligi fonidagi ko‘k avtomobil" fetchpriority="high" decoding="async">
         <div class="market-hero-copy"><h1 data-hero-title><span>O‘zingizga</span><span>mosini toping</span></h1><p data-hero-description>Avto, ehtiyot qism va moto — bir joyda</p><a href="{{ route('listings', ['section' => 'cars']) }}" class="btn btn-brand market-hero-action" data-hero-action aria-label="Avtomobillarni ko‘rish"><span>Avtomobillarni ko‘rish</span><i data-icon="chevron-right" aria-hidden="true"></i></a></div>
@@ -23,7 +23,7 @@
         ['title' => 'Fara', 'description' => 'Yorug‘lik tizimlari', 'photo' => 'headlight', 'filters' => ['section' => 'parts', 'part_category' => 'headlights']],
         ['title' => 'Motor', 'description' => 'Dvigatel va qismlar', 'photo' => 'engine', 'filters' => ['section' => 'parts', 'part_category' => 'engine']],
         ['title' => 'Moto', 'description' => 'Skuter, moped, mototsikl', 'photo' => 'moto', 'filters' => ['section' => 'moto']],
-        ['title' => 'Arenda', 'description' => 'Avtomobil ijarasi', 'photo' => 'rental', 'filters' => ['section' => 'cars', 'offer_type' => 'rent']],
+        ['title' => 'Avto arenda', 'description' => 'Avtomobillar ichida', 'photo' => 'rental', 'filters' => ['section' => 'cars', 'offer_type' => 'rent']],
     ];
 @endphp
 <nav class="market-quick-categories" aria-label="Tezkor kategoriyalar">@foreach ($homeCategories as $category)<a class="market-category-tile" href="{{ route('listings', $category['filters']) }}"><span class="market-category-photo market-category-photo--{{ $category['photo'] }}" aria-hidden="true"></span><i class="market-category-arrow" data-icon="chevron-right" aria-hidden="true"></i><strong>{{ $category['title'] }}</strong><span class="market-category-description">{{ $category['description'] }}</span></a>@endforeach</nav>

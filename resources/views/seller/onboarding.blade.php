@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', ($editing ? 'Profil sozlamalari' : 'Sotuvchi profili').' — BuxoroAvto')
+@section('title', ($editing ? 'Profil sozlamalari' : 'Sotuvchi profili').' — '.config('brand.name'))
 @section('robots', 'noindex,nofollow')
 @section('local-form-errors', '1')
 @section('content')
