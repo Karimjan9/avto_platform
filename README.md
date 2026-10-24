@@ -69,11 +69,13 @@ Apache virtual host'ining `DocumentRoot` qiymati ushbu loyihaning `public` papka
 
 Production server, baza, HTTPS, zaxiralar va keyingi deploy tartibi: [deploy/README.md](deploy/README.md).
 
+Telefon orqali kirish, 60 soniyalik qayta yuborish, bir soatda uchta SMS cheklovi va shaxsiy sotuvchi/do'kon kabineti: [docs/phone-auth.md](docs/phone-auth.md). SMS provayderi va matni tasdiqlanguncha `SMS_ENABLED=false`; interfeys bu holatni aniq ko'rsatadi va email orqali kirishni taklif qiladi.
+
 ## Frontend muhiti va tekshirish
 
 `npm ci` lock fayldagi aniq versiyalarni o'rnatadi. `npm run build` Vite yig'ilishini bajaradi, JS/CSS fayllarning gzip nusxalarini tayyorlaydi va boshlang'ich yuklama chegarasini tekshiradi: JavaScript 80 KiB, CSS 30 KiB (gzip). Kalendar, FilePond/Tom Select, Tabulator, Papa Parse, PhotoSwipe va Chart.js umumiy JS tarkibiga kirmaydi. noUiSlider shkalasi ochilgandagina yuklanadi. Tailwind faqat haqiqiy Blade/JS va pagination manbalarini ko'radi; eski compiled view fayllari CSS hajmini oshirmaydi.
 
-Web manzillar: `/`, `/elonlar`, `/elonlar/{id}`, `/kirish`, `/royxatdan-otish`, `/kabinet`, `/kabinet/elonlar/yangi`, `/kabinet/elonlar/{id}/tahrirlash`, `/kabinet/biznes/{id}/ombor`, `/kabinet/arenda/{id}`, `/admin`. Kabinet sessiya va CSRF bilan ishlaydi; brauzer tokenlari localStorage'ga yozilmaydi. Flutter tokenli API ishlashda davom etadi. Haqiqiy e'lonlar bo'lmasa, bo'sh holat ko'rsatiladi; production uchun soxta e'lon/statistika yaratilmaydi.
+Web manzillar: `/`, `/elonlar`, `/elonlar/{id}`, `/kirish`, `/kirish/email`, `/royxatdan-otish`, `/sotuvchi/sozlash`, `/kabinet`, `/kabinet/profil`, `/kabinet/elonlar/yangi`, `/kabinet/elonlar/{id}/tahrirlash`, `/kabinet/biznes/{id}/ombor`, `/kabinet/arenda/{id}`, `/admin`. Kabinet sessiya va CSRF bilan ishlaydi; brauzer tokenlari localStorage'ga yozilmaydi. Flutter tokenli API ishlashda davom etadi. Odatda ma'lumot bo'lmasa bo'sh holat chiqadi. Mijozga namoyish uchun `MARKETPLACE_PRESENTATION_ENABLED` va alohida `MarketplacePresentationSeeder` bilan ochiq belgilangan test ma'lumotlari yoqilishi mumkin; deploy bu seederni avtomatik ishlatmaydi. `/1` va `/2` faqat asl dizayn rasmlarini ko'rsatadi.
 
 `npm run test:browser` Playwright orqali desktop va Pixel 7 o'lchamida ish oqimlarini tekshiradi. Odatiy sinov manzili `http://127.0.0.1:8012`; `PLAYWRIGHT_BASE_URL` bilan o'zgartiriladi. Faqat alohida sinov bazasi va sinov akkauntlari ishlatilsin. Chromium: `npx playwright install chromium`. Oddiy foydalanuvchi bazasiga avtomatik fixture kiritilmaydi. `test-results` va `playwright-report` Git/release'dan chiqarilgan.
 

@@ -55,7 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('members', [BusinessCabinetController::class, 'saveMember']);
         Route::delete('members/{member}', [BusinessCabinetController::class, 'removeMember']);
         Route::patch('inventory/{listing}/stock', [BusinessCabinetController::class, 'stock']);
-        Route::post('import', [BusinessCabinetController::class, 'import']);
+        Route::post('import', [BusinessCabinetController::class, 'import'])->middleware(['phone.verified', 'seller.ready']);
         Route::get('inquiries', [BusinessCabinetController::class, 'inquiries']);
         Route::patch('inquiries/{inquiry}', [BusinessCabinetController::class, 'reply']);
         Route::get('part-requests', [PartRequestController::class, 'businessRequests']);

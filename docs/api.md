@@ -2,7 +2,7 @@
 
 Lokal manzil: `http://127.0.0.1:8001/api/v1`. Production manzili: `https://platform.buxoroavto.uz/api/v1` (domenning DNS va HTTPS sozlamalari tayyor bo'lishi kerak).
 
-Bu bosqichda backend va mobil API joriy qilingan. Blade orqali marketplace interfeysi, Flutter ilovasi, SMS tasdiqlash, to'lov va chat keyingi bosqichlarga qoladi.
+Backend va Blade marketplace interfeysi mavjud. Telefon orqali web kirish, SMS cheklovlari va sotuvchi kabineti: [phone-auth.md](phone-auth.md). Flutter uchun tokenli API alohida ishlaydi; mobil ilova, to'lov va chat bu relizga kirmaydi.
 
 ## Biznes tuzilmasi
 
@@ -34,14 +34,13 @@ Ro'yxatdan o'tish: `POST /auth/register`
 {
   "name": "Sotuvchi",
   "email": "seller@example.com",
-  "phone": "+998901234567",
   "password": "ExamplePass123",
   "password_confirmation": "ExamplePass123",
   "device_name": "Flutter Android"
 }
 ```
 
-`phone` ixtiyoriy; berilganda E.164 (`+998...`) formatida va noyob bo'lishi kerak. Email kichik harflarga o'tkaziladi. Parol 8–72 belgidan iborat bo'lib, harf va raqam qatnashishi kerak. Bu bosqichdagi login email/parol orqali; SMS/OTP integratsiyasi hali yo'q.
+Email kichik harflarga o'tkaziladi. Parol 8–72 belgidan iborat bo'lib, harf va raqam qatnashishi kerak. Parolli ro'yxatdan o'tishda `phone` yuborish taqiqlangan: raqam faqat SMS bilan tasdiqlangandan keyin hisobga ulanadi. Bu boshqalarning raqamini tasdiqsiz band qilib qo'yishning oldini oladi. API tokeni email/parol orqali olinadi; SMS web oqimi sessiya bilan ishlaydi.
 
 Javob: `201`, `{"user": {...}, "token": "...", "token_type": "Bearer"}`. Tokenni Flutter'da qurilmaning himoyalangan xotirasida saqlang. Bazada tokenning o'zi emas, hashi saqlanadi.
 
@@ -52,6 +51,10 @@ Javob: `201`, `{"user": {...}, "token": "...", "token_type": "Bearer"}`. Tokenni
 - Login va ro'yxatdan o'tish bir IP uchun birgalikda 10 so'rov/minut bilan cheklanadi. Umumiy API limiti: 120 so'rov/minut, foydalanuvchi yoki IP bo'yicha.
 
 Ochiq sotuvchi ma'lumotlarida email, parol, admin belgisi yoki moderatsiyaning ichki maydonlari berilmaydi. E'londagi `contact_phone` sotuvchi ochiq ko'rsatgan aloqa raqamidir.
+
+Shaxsiy hisob javobi `phone_verified`, `seller_type`, `seller_ready` va `city` maydonlarini ham beradi. Bu yerdagi `seller_type` hisob profili uchun `individual` yoki `shop`; e'lon javobidagi biznesdan aniqlanadigan `seller_type` bilan alohida ma'noga ega.
+
+E'lon/biznes yaratish va tahrirlash, e'lon holati, surat yuklash va CSV importi tasdiqlangan telefon hamda to'ldirilgan sotuvchi profilini talab qiladi. Aks holda `403` javobidagi `code` mos ravishda `phone_verification_required` yoki `seller_onboarding_required` bo'ladi. O'qish, o'chirish va admin moderatsiyasi uchun avvalgi vakolatlar saqlanadi. E'lonning aloqa raqami serverda tasdiqlangan hisob/biznes telefonidan olinadi.
 
 ## Ochiq endpointlar
 
@@ -95,7 +98,7 @@ Biznes katalogida `type`, `city`, `q`, `per_page` filtrlari mavjud.
 | GET | `/me/listings` | O'z e'lonlari, barcha holatlar; `status`, `per_page` filtrlari |
 | POST | `/me/listings` | E'lon yaratish, `201` |
 | GET | `/me/listings/{id}` | O'z e'loni, shu jumladan qoralama |
-| PUT | `/me/listings/{id}` | To'liq tahrir: barcha majburiy maydonlarni qayta yuboring |
+| PUT / PATCH | `/me/listings/{id}` | To'liq tahrir: barcha majburiy maydonlarni qayta yuboring |
 | PATCH | `/me/listings/{id}/status` | `draft`, `pending`, `sold`, `archived` holatiga o'tkazish |
 | DELETE | `/me/listings/{id}` | Yumshoq o'chirish, ommadan yashirish; `204` |
 | POST | `/me/listings/{id}/images` | Multipart `images[]` yuklash, `201` |

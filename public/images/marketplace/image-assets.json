@@ -1,0 +1,27 @@
+{
+  "generator": "Built-in image_gen",
+  "reference": "reference-1.png supplied by user",
+  "hero": {
+    "file": "bukhara-blue-onix.webp",
+    "source": "hero-blue-onix.png",
+    "prompt": "Use case: precise-object-edit. Reconstruct ONLY the photographic hero scene from the supplied purple BuxoroAvto reference: glossy deep blue Chevrolet Onix, front three-quarter view, Bukhara stone plaza with historic brick architecture, turquoise dome and minaret at golden hour. Full-bleed wide3:1, car center-right, quiet darker left for HTML copy. No text, buttons, UI, borders, watermarks or people. Preserve car/color/perspective/reference atmosphere."
+  },
+  "categories": {
+    "file": "category-reference.webp",
+    "source": "Unmodified user reference1 displayed as decorative CSS photo sprites"
+  },
+  "presentation_reference": {
+    "source": "reference-1.png supplied by user",
+    "source_sha256": "abebdefe06b7e8b8a5d03803cca7fc468cec65f420c89013af41da1dd6b6fc5d",
+    "format": "Lossless WebP crops, coordinates x/y/width/height",
+    "crops": {
+      "reference-hero.webp": [61, 158, 1017, 297],
+      "demo-onix.webp": [63, 668, 359, 132],
+      "demo-tracker.webp": [439, 668, 347, 132],
+      "demo-headlight.webp": [802, 668, 349, 132],
+      "demo-yamaha.webp": [1167, 668, 359, 132]
+    },
+    "usage": "Reference hero graphic on desktop; generated photo for smaller screens and alternate slides. Demo cards use original source bytes. All controls are interactive HTML."
+  },
+  "optimization": "WebP format derivatives; reference previews remain byte-identical PNG originals."
+}

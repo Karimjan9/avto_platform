@@ -1,0 +1,18 @@
+<section id="qidiruv" class="panel market-filter-panel" x-data="{ expanded: false }" aria-label="E’lonlarni filtrlash">
+    <form method="GET" action="{{ route('listings') }}" data-filter-form>
+        <div class="market-filter-grid">
+            <label class="field market-filter-query">Nima qidiryapsiz?<input class="input" name="q" value="{{ $filters['q'] ?? '' }}" maxlength="100" placeholder="Model, detal yoki e’lon nomi"></label>
+            <label class="field">Yo‘nalish<select class="select" name="section"><option value="">Barcha yo‘nalishlar</option><option value="cars" @selected(($filters['section'] ?? '') === 'cars')>Avtomobillar</option><option value="parts" @selected(($filters['section'] ?? '') === 'parts')>Ehtiyot qismlar</option><option value="moto" @selected(($filters['section'] ?? '') === 'moto')>Moto</option></select></label>
+            <label class="field">Holati<select class="select" name="condition"><option value="">Barchasi</option><option value="new" @selected(($filters['condition'] ?? '') === 'new')>Yangi</option><option value="used" @selected(($filters['condition'] ?? '') === 'used')>B/u</option></select></label>
+            <label class="field">Shahar / tuman<input class="input" name="city" value="{{ $filters['city'] ?? '' }}" maxlength="100" placeholder="Masalan, Buxoro"></label>
+            <label class="field">Valyuta<select class="select" name="currency"><option value="UZS" @selected(($filters['currency'] ?? 'UZS') === 'UZS')>So‘m</option><option value="USD" @selected(($filters['currency'] ?? '') === 'USD')>USD</option></select></label>
+            <label class="field">Narx, dan<input class="input" type="number" name="price_min" min="0" step="0.01" value="{{ $filters['price_min'] ?? '' }}" placeholder="0"></label>
+            <label class="field">Narx, gacha<input class="input" type="number" name="price_max" min="0" step="0.01" value="{{ $filters['price_max'] ?? '' }}" placeholder="Cheklanmagan"></label>
+            <label class="field">Taklif turi<select class="select" name="offer_type"><option value="">Barchasi</option><option value="sale" @selected(($filters['offer_type'] ?? '') === 'sale')>Sotuv</option><option value="rent" @selected(($filters['offer_type'] ?? '') === 'rent')>Arenda</option></select></label>
+            <label class="field">Tartiblash<select class="select" name="sort"><option value="newest" @selected(($filters['sort'] ?? '') === 'newest')>Eng yangi</option><option value="price_asc" @selected(($filters['sort'] ?? '') === 'price_asc')>Arzonidan</option><option value="price_desc" @selected(($filters['sort'] ?? '') === 'price_desc')>Qimmatidan</option></select></label>
+        </div>
+        @foreach (array_diff_key($filters, array_flip(['q', 'section', 'condition', 'city', 'currency', 'price_min', 'price_max', 'offer_type', 'sort', 'page'])) as $name => $value)@if (is_scalar($value))<input type="hidden" name="{{ $name }}" value="{{ $value }}">@endif @endforeach
+        <div class="market-filter-slider" x-cloak x-show="expanded"><div data-price-range data-max="{{ ($filters['currency'] ?? 'UZS') === 'USD' ? 200000 : 2000000000 }}"></div><p class="muted">Aniq narxni yuqoridagi maydonlarga ham kiritishingiz mumkin.</p></div>
+        <div class="market-filter-actions"><button type="button" class="btn btn-ghost" @click="expanded = !expanded" :aria-expanded="expanded"><i data-icon="sliders-horizontal" aria-hidden="true"></i>Narx shkalasi</button><div><a href="{{ route('listings') }}" class="btn btn-ghost">Tozalash</a><button class="btn btn-brand" type="submit"><i data-icon="search" aria-hidden="true"></i>Qidirish</button></div></div>
+    </form>
+</section>

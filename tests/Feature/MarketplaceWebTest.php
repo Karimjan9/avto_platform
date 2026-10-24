@@ -22,6 +22,22 @@ class MarketplaceWebTest extends TestCase
         $this->get('/elonlar/'.$published->id)->assertOk()->assertSee($published->description);
     }
 
+    public function test_listing_titles_and_descriptions_are_text_in_page_and_social_metadata(): void
+    {
+        $title = 'Onix "><script id="untrusted-title">alert(1)</script>';
+        $description = 'Tavsif "><script id="untrusted-description">alert(2)</script>';
+        $listing = Listing::factory()->published()->create(compact('title', 'description'));
+        $response = $this->get('/elonlar/'.$listing->id)->assertOk();
+        $document = new \DOMDocument;
+        $document->loadHTML('<?xml encoding="UTF-8">'.$response->getContent(), LIBXML_NOERROR | LIBXML_NOWARNING);
+        $xpath = new \DOMXPath($document);
+        $this->assertSame(0, $xpath->query('//script[@id="untrusted-title" or @id="untrusted-description"]')->length);
+        $this->assertSame($title.' — BuxoroAvto', $document->getElementsByTagName('title')->item(0)->textContent);
+        foreach (['og:title', 'og:description'] as $property) {
+            $this->assertSame($property === 'og:title' ? $title.' — BuxoroAvto' : $description, $xpath->query('//meta[@property="'.$property.'"]')->item(0)->getAttribute('content'));
+        }
+    }
+
     public function test_listing_cards_fetch_one_cover_and_query_count_does_not_grow_per_card(): void
     {
         $first = Listing::factory()->published()->create();
@@ -59,6 +75,9 @@ class MarketplaceWebTest extends TestCase
         $this->post('/royxatdan-otish', ['name' => 'Yangi xaridor', 'email' => 'new@example.test', 'password' => 'SafePass123', 'password_confirmation' => 'SafePass123', 'is_admin' => true])->assertRedirect('/kabinet');
         $user = User::where('email', 'new@example.test')->firstOrFail();
         $this->assertFalse($user->is_admin);
+        $this->get('/kabinet/elonlar/yangi')->assertRedirect(route('phone.start'));
+        $user->forceFill(['phone' => '+998901111110', 'phone_verified_at' => now(), 'seller_type' => 'individual', 'city' => 'Buxoro', 'seller_onboarded_at' => now()])->save();
+        $this->actingAs($user);
         $other = Listing::factory()->create();
         $this->get('/kabinet/elonlar/'.$other->id.'/tahrirlash')->assertForbidden();
         $this->get('/admin')->assertForbidden();
@@ -78,6 +97,46 @@ class MarketplaceWebTest extends TestCase
         $this->get('/admin')->assertOk()->assertSee('Tekshiruvdagi');
         $other = Listing::factory()->create(['title' => 'Admin uchun yopiq qoralama']);
         $this->get('/admin/elonlar/'.$other->id)->assertOk()->assertSee($other->title);
+    }
+
+    public function test_business_editor_preserves_company_branch_and_stock_for_owner_and_catalog_staff(): void
+    {
+        $business = $this->company();
+        $branch = $business->branches()->create(['name' => 'Markaziy filial', 'city' => 'Buxoro', 'address' => 'Markaziy ko‘cha 1', 'is_active' => true]);
+        $listing = $this->offer($business, stock: 7);
+        $listing->update(['business_branch_id' => $branch->id]);
+        $worker = User::factory()->create();
+        $business->members()->create(['user_id' => $worker->id, 'permissions' => ['catalog']]);
+
+        foreach ([$business->user, $worker] as $editor) {
+            $response = $this->actingAs($editor)->get('/kabinet/elonlar/'.$listing->id.'/tahrirlash')->assertOk();
+            $document = new \DOMDocument;
+            $document->loadHTML($response->getContent(), LIBXML_NOERROR | LIBXML_NOWARNING);
+            $form = (new \DOMXPath($document))->query('//form[@data-listing-editor]')->item(0);
+            $this->assertNotNull($form);
+            $initial = json_decode($form->getAttribute('data-initial'), true, flags: JSON_THROW_ON_ERROR);
+            $this->assertArrayHasKey('business_id', $initial);
+            $this->assertSame($business->id, $initial['business_id']);
+            $this->assertSame($branch->id, $initial['business_branch_id']);
+
+            $body = $this->payload([
+                'business_id' => $initial['business_id'],
+                'business_branch_id' => $initial['business_branch_id'],
+                'part_product_id' => $initial['part_product_id'],
+                'details' => ['stock_quantity' => $initial['details']['stock_quantity']],
+                'expected_stock_version' => $initial['details']['stock_version'],
+            ]);
+            $this->putJson('/api/v1/me/listings/'.$listing->id, $body)->assertOk()
+                ->assertJsonPath('data.business_id', $business->id)
+                ->assertJsonPath('data.business_branch_id', $branch->id)
+                ->assertJsonPath('data.details.stock_quantity', 7)
+                ->assertJsonPath('data.details.stock_version', $initial['details']['stock_version'] + 1);
+            $this->assertSame($business->user_id, $listing->fresh()->user_id);
+        }
+
+        $this->actingAs(User::factory()->create())->get('/kabinet/elonlar/'.$listing->id.'/tahrirlash')->assertForbidden();
+        $this->putJson('/api/v1/me/listings/'.$listing->id, $body)->assertForbidden();
+        $this->assertDatabaseHas('listings', ['id' => $listing->id, 'business_id' => $business->id, 'business_branch_id' => $branch->id]);
     }
 
     public function test_seller_calendar_requires_both_bounds_and_limits_requested_window(): void

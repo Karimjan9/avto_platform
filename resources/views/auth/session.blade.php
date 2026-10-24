@@ -10,6 +10,6 @@
         @if ($register)<label class="field">Parolni takrorlang<input class="input" name="password_confirmation" type="password" autocomplete="new-password" required minlength="8" maxlength="72"></label><p class="muted">Kamida 8 ta belgi, harf va raqam ishlating.</p>@endif
         <button class="btn btn-brand w-full" type="submit">{{ $register ? 'Akkaunt yaratish' : 'Kirish' }}</button>
     </form>
-    <p class="muted mt-6 text-center">{{ $register ? 'Akkauntingiz bormi?' : 'Yangi foydalanuvchimisiz?' }} <a class="font-semibold text-emerald-800 underline" href="{{ $register ? route('login') : route('register') }}">{{ $register ? 'Kirish' : 'Ro‘yxatdan o‘tish' }}</a></p>
+    <p class="muted mt-6 text-center">{{ $register ? 'Akkauntingiz bormi?' : 'Yangi foydalanuvchimisiz?' }} <a class="font-semibold text-violet-800 underline" href="{{ route('login') }}">Telefon orqali kirish</a></p>
 </section></main>
 @endsection

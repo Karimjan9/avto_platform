@@ -21,6 +21,7 @@ class ListingResource extends JsonResource
             'offer_type' => $this->offer_type, 'rental_period' => $this->rental_period,
             'deal_terms' => $this->deal_terms ?? ['cash'],
             'seller_type' => $this->business_id ? collect(BusinessType::cases())->first(fn ($type) => $type->section() === $this->section)?->value : 'private',
+            'business_id' => $this->business_id,
             'vehicle_variant_id' => $this->vehicle_variant_id, 'part_product_id' => $this->part_product_id, 'business_branch_id' => $this->business_branch_id,
             'vehicle_variant' => $this->whenLoaded('variant'),
             'part_product' => new PartProductResource($this->whenLoaded('partProduct')),

@@ -32,6 +32,22 @@ class AuthApiTest extends TestCase
         $this->assertDatabaseCount('users', 0);
     }
 
+    public function test_password_registration_cannot_reserve_an_unverified_phone(): void
+    {
+        $registration = [
+            'name' => 'Seller', 'email' => 'seller@example.com', 'password' => 'Password123',
+            'password_confirmation' => 'Password123', 'device_name' => 'Phone',
+        ];
+        $this->postJson('/api/v1/auth/register', $registration + ['phone' => '+998901234567'])
+            ->assertUnprocessable()->assertJsonValidationErrors('phone');
+        $this->assertDatabaseCount('users', 0);
+        $this->assertDatabaseCount('personal_access_tokens', 0);
+
+        $this->postJson('/api/v1/auth/register', $registration)->assertCreated()
+            ->assertJsonPath('user.phone', null)->assertJsonPath('user.phone_verified', false);
+        $this->assertDatabaseMissing('users', ['phone' => '+998901234567']);
+    }
+
     public function test_login_logout_and_independent_devices_work_with_real_bearer_tokens(): void
     {
         $user = User::factory()->create();

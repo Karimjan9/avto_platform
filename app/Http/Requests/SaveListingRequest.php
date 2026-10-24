@@ -19,6 +19,16 @@ class SaveListingRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        if ($this->user()?->hasVerifiedPhone()) {
+            $phone = $this->user()->phone;
+            if (is_scalar($this->input('business_id')) && ctype_digit((string) $this->input('business_id'))) {
+                $business = Business::with('user:id,phone,phone_verified_at')->find($this->integer('business_id'));
+                if ($business?->user?->hasVerifiedPhone() && $business->phone === $business->user->phone) {
+                    $phone = $business->phone;
+                }
+            }
+            $this->merge(['contact_phone' => $phone]);
+        }
         if (! is_array($this->input('details'))) {
             return;
         }

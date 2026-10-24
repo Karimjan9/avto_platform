@@ -1,8 +1,9 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
 import focus from '@alpinejs/focus';
-import { createIcons, UserRound, Plus, Menu, CarFront, Wrench, Bike, ArrowUpRight, Search, SlidersHorizontal, Image, Phone } from 'lucide';
+import { createIcons, UserRound, Plus, Menu, CarFront, Settings as Wrench, Motorbike as Bike, ArrowUpRight, Search, SlidersHorizontal, Image, Phone, ChevronRight, ArrowRight, CalendarDays, MapPin } from 'lucide';
 import { api, notify, explainError } from './lib/http';
+import { mountSaved, mountHero, mountFinder } from './widgets/marketplace';
 
 Alpine.plugin(focus);
 Alpine.data('toast', () => ({
@@ -10,7 +11,15 @@ Alpine.data('toast', () => ({
     show(message) { this.message = message; clearTimeout(this.timer); this.timer = setTimeout(() => { this.message = ''; }, 6500); },
 }));
 Alpine.start();
-createIcons({ icons: { UserRound, Plus, Menu, CarFront, Wrench, Bike, ArrowUpRight, Search, SlidersHorizontal, Image, Phone }, nameAttr: 'data-icon', attrs: { 'aria-hidden': 'true', 'stroke-width': 1.7 } });
+createIcons({ icons: { UserRound, Plus, Menu, CarFront, Wrench, Bike, ArrowUpRight, Search, SlidersHorizontal, Image, Phone, ChevronRight, ArrowRight, CalendarDays, MapPin }, nameAttr: 'data-icon', attrs: { 'aria-hidden': 'true', 'stroke-width': 1.7 } });
+mountSaved();
+document.querySelectorAll('[data-market-hero]').forEach(mountHero);
+document.querySelectorAll('[data-fit-finder]').forEach(form => mountFinder(form).catch(() => notify('Transport katalogini yuklab bo‘lmadi.')));
+document.querySelectorAll('[data-otp-input]').forEach(input => input.addEventListener('input', () => { input.value = input.value.replace(/[^0-9]/g, '').slice(0, 6); }));
+document.querySelectorAll('[data-phone-auth-form]').forEach(form => form.addEventListener('submit', () => {
+    const button = form.querySelector('[data-phone-send]');
+    if (button) { button.disabled = true; button.textContent = 'Kod yuborilmoqda…'; }
+}));
 
 function load(selector, importer) {
     const nodes = document.querySelectorAll(selector);

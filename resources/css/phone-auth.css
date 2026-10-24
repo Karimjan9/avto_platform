@@ -1,0 +1,71 @@
+.phone-auth-page { padding-top:42px; padding-bottom:40px; color:#17122e; }
+.phone-auth-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,440px); gap:76px; align-items:center; width:min(100%,1050px); margin-inline:auto; }
+.phone-auth-benefits { position:relative; isolation:isolate; display:flex; flex-direction:column; gap:42px; min-height:520px; padding:38px 34px; overflow:hidden; border-radius:24px; background:#f0ebff; }
+.phone-auth-brand { display:inline-flex; align-items:center; gap:12px; width:fit-content; font-size:24px; font-weight:750; letter-spacing:-.8px; }
+.phone-auth-brand img { width:48px; height:48px; flex:none; }
+.phone-auth-brand strong { font-weight:400; }
+.phone-auth-eyebrow { display:block; margin-bottom:14px; color:#68558d; font-size:10px; font-weight:750; letter-spacing:1.6px; }
+.phone-auth-benefits h2 { font-size:43px; line-height:1.12; font-weight:800; letter-spacing:-1.4px; }
+.phone-auth-benefits p { max-width:300px; margin-top:18px; color:#625474; font-size:15px; line-height:1.6; }
+.phone-auth-benefits ul { display:grid; gap:17px; position:relative; z-index:1; }
+.phone-auth-benefits li { display:flex; align-items:center; gap:10px; color:#4c405f; font-size:12px; line-height:1.5; }
+.phone-auth-benefits li span { display:grid; place-items:center; width:20px; height:20px; flex:none; border-radius:50%; background:#e3d8ff; color:#5830d9; font-weight:700; }
+.phone-auth-road { position:absolute; right:-32px; top:0; z-index:-1; width:100px; height:120%; background:#e4dbff80; border-inline:2px solid #dacfff80; transform:rotate(-20deg); }
+.phone-auth-road span { display:block; width:3px; height:100%; margin-inline:auto; background:repeating-linear-gradient(180deg,#d0c1f780 0 15px,transparent 15px 35px); }
+.phone-auth-card { min-width:0; padding-block:12px; }
+.phone-auth-steps { display:flex; align-items:center; gap:26px; margin-bottom:32px; color:#74677f; font-size:11px; font-weight:500; }
+.phone-auth-steps li { display:flex; align-items:center; gap:7px; }
+.phone-auth-steps b { display:grid; place-items:center; width:23px; height:23px; border:1px solid #e5e0ec; border-radius:50%; font-size:10px; font-weight:600; }
+.phone-auth-steps .is-current { color:#5d3bfa; }
+.phone-auth-steps .is-current b { border-color:#5d3bfa; background:#5d3bfa; color:#fff; }
+.phone-auth-steps .is-done { color:#32824f; }
+.phone-auth-steps .is-done b { border-color:#d4eedf; background:#eaf8ef; }
+.phone-auth-symbol { display:grid; place-items:center; width:48px; height:48px; margin-bottom:20px; border-radius:14px; background:#f0ebff; color:#5d3bfa; }
+.phone-auth-symbol svg { width:25px; height:25px; }
+.phone-auth-card h1 { font-size:31px; line-height:1.2; font-weight:750; letter-spacing:-.7px; }
+.phone-auth-description { margin-top:13px; color:#73677f; font-size:14px; line-height:1.65; }
+.phone-auth-description strong { color:#33283e; font-weight:600; white-space:nowrap; }
+.phone-auth-form { margin-top:26px; }
+.phone-auth-label { display:block; margin-bottom:10px; color:#3d304c; font-size:13px; font-weight:600; }
+.phone-auth-number { display:flex; align-items:center; min-height:54px; overflow:hidden; border:1px solid #ded8e8; border-radius:10px; background:#fff; }
+.phone-auth-number:focus-within { border-color:#7453ff; outline:3px solid #f0eaff; }
+.phone-auth-number>span { flex:none; padding:0 16px; border-right:1px solid #e9e4f0; color:#33263d; font-size:16px; font-weight:500; }
+.phone-auth-number input { width:100%; min-width:0; height:52px; padding:0 15px; border:0; background:transparent; outline:none; color:#21182d; font:inherit; font-size:17px; letter-spacing:.3px; }
+.phone-auth-number input::placeholder { color:#74677f; }
+.phone-auth-help { margin-top:9px; color:#7d728a; font-size:11px; line-height:1.6; }
+.phone-auth-error { margin-top:9px; color:#b82e3c; font-size:12px; line-height:1.5; }
+.phone-auth-submit { display:flex; align-items:center; justify-content:center; gap:14px; width:100%; min-height:49px; margin-top:23px; padding:12px 16px; border:1px solid #5d3bfa; border-radius:10px; background:#5d3bfa; color:#fff; font-size:14px; font-weight:600; cursor:pointer; }
+.phone-auth-submit:hover { background:#4c2cda; border-color:#4c2cda; }
+.phone-auth-submit:disabled { opacity:1; cursor:not-allowed; border-color:#e1d9eb; background:#ebe6f3; color:#6c5b7a; }
+.phone-auth-submit svg { width:18px; height:18px; }
+.phone-auth-note { margin-top:18px; color:#74677f; font-size:11px; line-height:1.7; }
+.phone-auth-divider { display:flex; align-items:center; gap:14px; margin-top:25px; color:#74677f; font-size:10px; }
+.phone-auth-divider::before,.phone-auth-divider::after { content:''; flex:1; height:1px; background:#ece7f1; }
+.phone-auth-email { display:flex; align-items:center; justify-content:center; gap:8px; min-height:45px; margin-top:10px; color:#655572; font-size:12px; font-weight:500; }
+.phone-auth-email svg { width:15px; height:15px; }
+.phone-auth-email:hover,.phone-auth-back:hover { color:#5d3bfa; }
+.phone-auth-code { display:block; width:100%; min-height:64px; padding:12px 16px 12px 30px; border:1px solid #dcd5e7; border-radius:11px; background:#fbfaff; color:#261d33; font:inherit; font-size:31px; font-weight:600; text-align:center; letter-spacing:14px; }
+.phone-auth-code::placeholder { color:#74677f; }
+.phone-auth-number.has-error,.phone-auth-code.has-error { border-color:#c74352; }
+.phone-auth-resend { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; margin-top:24px; font-size:11px; color:#74677f; }
+.phone-auth-resend form { margin-left:auto; }
+.phone-auth-resend button { border:0; background:none; color:#5d3bfa; font:inherit; font-weight:600; }
+.phone-auth-resend button:disabled { cursor:not-allowed; color:#756780; }
+.phone-auth-sent,.phone-auth-limit,.phone-auth-availability { display:flex; align-items:flex-start; gap:10px; margin-top:18px; padding:13px 14px; border:1px solid #cce8d7; border-radius:10px; background:#eef9f2; color:#285e3f; }
+.phone-auth-notice-icon { display:grid; place-items:center; width:23px; height:23px; flex:0 0 23px; margin-top:1px; border-radius:50%; background:#ddf1e5; font-size:13px; font-weight:750; line-height:1; }
+.phone-auth-sent strong,.phone-auth-limit strong,.phone-auth-availability strong { display:block; font-size:12px; line-height:1.5; font-weight:700; }
+.phone-auth-sent p,.phone-auth-limit p,.phone-auth-availability p { margin-top:4px; font-size:11px; line-height:1.7; }
+.phone-auth-limit { border-color:#efddaf; background:#fff8e9; color:#73521f; }
+.phone-auth-limit .phone-auth-notice-icon { background:#f8eac8; color:#79581f; font-size:16px; }
+.phone-auth-availability { border-color:#dfd6f3; background:#f6f2ff; color:#66507f; }
+.phone-auth-availability .phone-auth-notice-icon { background:#e9e0fa; color:#685081; }
+.phone-auth-limit .phone-auth-wait { margin-top:8px; color:#72501b; font-weight:600; }
+.phone-auth-wait>span { display:inline-block; min-width:42px; margin-left:4px; font-size:12px; font-weight:750; font-variant-numeric:tabular-nums; }
+.phone-auth-send-policy { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:6px 12px; margin-top:11px; color:#74677f; font-size:10px; line-height:1.7; }
+.phone-auth-send-policy>span { white-space:nowrap; }
+.phone-auth-send-policy strong { color:#5c486e; font-weight:700; }
+[data-resend-countdown],[data-code-countdown] { font-variant-numeric:tabular-nums; }
+.phone-auth-back { display:inline-flex; margin-top:23px; color:#6f617e; font-size:12px; font-weight:500; }
+@media(max-width:1050px) { .phone-auth-layout { gap:36px; grid-template-columns:minmax(0,1fr) minmax(0,400px); } .phone-auth-benefits { padding:30px 25px; } .phone-auth-benefits h2 { font-size:36px; } }
+@media(max-width:760px) { .phone-auth-page { padding-block:28px; } .phone-auth-layout { display:block; max-width:440px; } .phone-auth-benefits { display:none; } .phone-auth-card { padding:0 3px; } .phone-auth-steps { margin-bottom:28px; gap:27px; } .phone-auth-card h1 { font-size:28px; } .phone-auth-code { font-size:29px; letter-spacing:12px; padding-left:28px; } .phone-auth-note { max-width:360px; } }
+@media(prefers-reduced-motion:reduce) { .phone-auth-page * { scroll-behavior:auto; } }

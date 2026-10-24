@@ -80,4 +80,51 @@ class BusinessCabinetTest extends TestCase
         $foreign = $this->offer($this->company());
         $this->postJson('/api/v1/me/businesses/'.$company->id.'/import', ['rows' => [$this->payload(['id' => $foreign->id])]])->assertNotFound();
     }
+
+    public function test_bulk_import_rejects_unverified_owners_and_catalog_staff_before_creating_listings(): void
+    {
+        foreach (['owner', 'catalog_staff'] as $role) {
+            $actor = User::factory()->unverifiedPhone()->create();
+            $company = $this->company($role === 'owner' ? $actor : null);
+            if ($role === 'catalog_staff') {
+                $company->members()->create(['user_id' => $actor->id, 'permissions' => ['catalog']]);
+            }
+            Sanctum::actingAs($actor);
+            $this->postJson('/api/v1/me/businesses/'.$company->id.'/import', ['rows' => [$this->payload(['submit' => true])]])
+                ->assertForbidden()->assertJsonPath('code', 'phone_verification_required');
+            $this->assertDatabaseCount('listings', 0);
+        }
+    }
+
+    public function test_bulk_import_rejects_incomplete_owners_and_catalog_staff_before_creating_listings(): void
+    {
+        foreach (['owner', 'catalog_staff'] as $role) {
+            $actor = User::factory()->sellerProfileIncomplete()->create();
+            $company = $this->company($role === 'owner' ? $actor : null);
+            if ($role === 'catalog_staff') {
+                $company->members()->create(['user_id' => $actor->id, 'permissions' => ['catalog']]);
+            }
+            Sanctum::actingAs($actor);
+            $this->postJson('/api/v1/me/businesses/'.$company->id.'/import', ['rows' => [$this->payload(['submit' => true])]])
+                ->assertForbidden()->assertJsonPath('code', 'seller_onboarding_required');
+            $this->assertDatabaseCount('listings', 0);
+        }
+    }
+
+    public function test_verified_owner_can_still_patch_listing_and_business_with_verified_contact(): void
+    {
+        $company = $this->company();
+        $owner = $company->user;
+        Sanctum::actingAs($owner);
+        $listingId = $this->postJson('/api/v1/me/listings', $this->payload(['business_id' => $company->id]))->assertCreated()->json('data.id');
+        $this->patchJson('/api/v1/me/listings/'.$listingId, $this->payload([
+            'business_id' => $company->id, 'title' => 'PATCH orqali yangilangan mahsulot', 'expected_stock_version' => 1,
+        ]))->assertOk()->assertJsonPath('data.title', 'PATCH orqali yangilangan mahsulot')->assertJsonPath('data.contact_phone', $owner->phone);
+        $this->assertDatabaseHas('listings', ['id' => $listingId, 'title' => 'PATCH orqali yangilangan mahsulot', 'user_id' => $owner->id]);
+        $this->patchJson('/api/v1/me/businesses/'.$company->id, [
+            'type' => 'parts_store', 'name' => 'PATCH orqali yangilangan do‘kon', 'city' => 'Buxoro', 'phone' => '+998900000001',
+        ])->assertOk()->assertJsonPath('data.name', 'PATCH orqali yangilangan do‘kon')->assertJsonPath('data.phone', $owner->phone);
+        $this->assertSame('PATCH orqali yangilangan do‘kon', $company->refresh()->name);
+        $this->assertSame($owner->phone, $company->phone);
+    }
 }

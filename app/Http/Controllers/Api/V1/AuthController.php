@@ -22,14 +22,14 @@ class AuthController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'min:2', 'max:120'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'phone' => ['nullable', 'string', 'regex:/^\+[1-9][0-9]{7,14}$/', 'unique:users,phone'],
+            'phone' => ['prohibited'],
             'password' => ['required', 'string', 'confirmed', 'max:72', Password::min(8)->letters()->numbers()],
             'device_name' => ['required', 'string', 'max:80'],
             'is_admin' => ['prohibited'],
-        ]);
+        ], ['phone.prohibited' => 'Telefon raqamini SMS kod orqali tasdiqlab ulang.']);
 
         return DB::transaction(function () use ($data) {
-            $user = User::create(collect($data)->only(['name', 'email', 'phone', 'password'])->all());
+            $user = User::create(collect($data)->only(['name', 'email', 'password'])->all());
 
             return response()->json([
                 'user' => new UserResource($user->refresh()),

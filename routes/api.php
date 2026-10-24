@@ -26,13 +26,17 @@ Route::prefix('v1')->name('api.v1.')->middleware('throttle:marketplace-api')->gr
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('me', [AuthController::class, 'me'])->name('me');
         Route::post('auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
-        Route::apiResource('me/listings', MyListingController::class)->except('update')->names('me.listings');
-        Route::put('me/listings/{listing}', [MyListingController::class, 'update'])->name('me.listings.update');
-        Route::patch('me/listings/{listing}/status', [MyListingController::class, 'status'])->name('me.listings.status');
-        Route::post('me/listings/{listing}/images', [ListingImageController::class, 'store'])->name('me.listings.images.store');
+        Route::apiResource('me/listings', MyListingController::class)->except(['store', 'update'])->names('me.listings');
+        Route::middleware(['phone.verified', 'seller.ready'])->group(function () {
+            Route::post('me/listings', [MyListingController::class, 'store'])->name('me.listings.store');
+            Route::match(['put', 'patch'], 'me/listings/{listing}', [MyListingController::class, 'update'])->name('me.listings.update');
+            Route::patch('me/listings/{listing}/status', [MyListingController::class, 'status'])->name('me.listings.status');
+            Route::post('me/listings/{listing}/images', [ListingImageController::class, 'store'])->name('me.listings.images.store');
+        });
         Route::delete('me/listings/{listing}/images/{image}', [ListingImageController::class, 'destroy'])->name('me.listings.images.destroy');
-        Route::apiResource('me/businesses', MyBusinessController::class)->except('update')->names('me.businesses');
-        Route::put('me/businesses/{business}', [MyBusinessController::class, 'update'])->name('me.businesses.update');
+        Route::apiResource('me/businesses', MyBusinessController::class)->except(['store', 'update'])->names('me.businesses');
+        Route::post('me/businesses', [MyBusinessController::class, 'store'])->middleware(['phone.verified', 'seller.ready'])->name('me.businesses.store');
+        Route::match(['put', 'patch'], 'me/businesses/{business}', [MyBusinessController::class, 'update'])->middleware(['phone.verified', 'seller.ready'])->name('me.businesses.update');
 
         Route::prefix('admin')->name('admin.')->middleware('can:marketplace-admin')->group(function () {
             Route::get('listings', [AdminListingController::class, 'index'])->name('listings.index');

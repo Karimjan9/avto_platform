@@ -25,6 +25,8 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
+        'seller_type',
+        'city',
     ];
 
     /**
@@ -46,9 +48,24 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'phone_verified_at' => 'datetime',
+            'seller_onboarded_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
         ];
+    }
+
+    public function hasVerifiedPhone(): bool
+    {
+        return $this->phone_verified_at !== null && is_string($this->phone)
+            && preg_match('/^\+998[0-9]{9}$/D', $this->phone) === 1;
+    }
+
+    public function hasCompletedSellerProfile(): bool
+    {
+        return $this->hasVerifiedPhone() && $this->seller_onboarded_at !== null
+            && in_array($this->seller_type, ['individual', 'shop'], true)
+            && filled($this->name) && filled($this->city);
     }
 
     public function listings(): HasMany

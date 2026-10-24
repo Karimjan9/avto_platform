@@ -7,6 +7,7 @@ import ValidateSize from 'filepond-plugin-file-validate-size';
 import ValidateType from 'filepond-plugin-file-validate-type';
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+import '../../css/listing-editor.css';
 import { api, notify, explainError } from '../lib/http';
 import { get, set, scalar, schemaParams } from '../lib/form-data';
 
@@ -18,6 +19,9 @@ function option(value, label) { const node = el('option', '', labels[value] || l
 export async function mount(form) {
     const state = JSON.parse(form.dataset.initial);
     const businesses = JSON.parse(form.dataset.businesses);
+    const guided = form.dataset.guided === 'true';
+    const verifiedPhone = form.dataset.verifiedPhone;
+    if (verifiedPhone) state.contact_phone = businesses.find(item => item.id === Number(state.business_id))?.verified_contact_phone || verifiedPhone;
     const container = form.querySelector('[data-schema-fields]'), errors = form.querySelector('[data-form-errors]'), button = form.querySelector('[data-save-listing]'), status = form.querySelector('[data-save-status]');
     let schema, sequence = 0, abort, controls = [], selects = [], masks = [], catalog = [];
     let existing = state.images || [];
@@ -83,6 +87,7 @@ export async function mount(form) {
     }
     function build(path, field, parent, value = get(state, path)) {
         if (path.includes('*') || ['submit', 'vehicle_variant_id'].includes(path)) return;
+        if (guided && (path === 'section' || (['business_id', 'business_branch_id'].includes(path) && !businesses.length && !state.business_id))) return;
         if (field.value_from) value = get(state, field.value_from);
         if (value === undefined) value = field.default;
         const id = `field-${path.replaceAll('.', '-')}`;
@@ -132,6 +137,7 @@ export async function mount(form) {
             if (input.type === 'number') { input.step = field.type === 'integer' ? '1' : '0.01'; if (field.constraints.min !== undefined) input.min = field.constraints.min; if (field.constraints.max !== undefined) input.max = field.constraints.max; }
             else if (field.constraints.max && field.type === 'string') input.maxLength = field.constraints.max;
             if (field.value_from || schema.read_only_fields?.includes(path)) input.readOnly = true;
+            if (path === 'contact_phone' && verifiedPhone) input.readOnly = true;
             label.append(input); read = () => scalar(input.value, field.type);
             if (path === 'contact_phone') { input.autocomplete = 'tel'; const mask = IMask(input, { mask: '+{998} 00 000 00 00' }); masks.push(mask); read = () => mask.unmaskedValue ? `+${mask.unmaskedValue}` : null; }
         }
@@ -141,7 +147,7 @@ export async function mount(form) {
             input.addEventListener('change', () => {
                 collect();
                 if (path === 'section') { state.offer_type = 'sale'; state.details = {}; state.vehicle_variant_id = null; state.part_product_id = null; catalog = []; }
-                if (path === 'business_id') state.business_branch_id = null;
+                if (path === 'business_id') { state.business_branch_id = null; if (verifiedPhone) state.contact_phone = businesses.find(item => item.id === Number(state.business_id))?.verified_contact_phone || verifiedPhone; }
                 if (schema.refresh_on.includes(path) || path === 'business_id') refresh();
             });
         }
@@ -160,15 +166,20 @@ export async function mount(form) {
             selects.forEach(instance => instance.destroy()); masks.forEach(instance => instance.destroy()); selects = []; masks = []; controls = [];
             container.replaceChildren();
             const groups = {};
-            [['general', 'E’lon haqida'], ['details', 'Texnik ma’lumotlar'], ['rental', 'Arenda shartlari']].forEach(([key, title]) => {
-                const section = el('fieldset', 'panel p-5 sm:p-6'); section.append(el('legend', 'px-2 text-lg font-bold', title)); const grid = el('div', 'grid gap-5 sm:grid-cols-2'); section.append(grid); groups[key] = { section, grid };
+            [['general', 'E’lon haqida'], ['details', 'Texnik ma’lumotlar'], ['rental', 'Arenda shartlari'], ['contact', 'Aloqa va manzil']].forEach(([key, title]) => {
+                const section = el('fieldset', 'panel p-5 sm:p-6 listing-editor-group'); section.id = key === 'general' ? 'listing-about' : `listing-${key}`; section.append(el('legend', 'px-2 text-lg font-bold', title)); const grid = el('div', 'grid gap-5 sm:grid-cols-2'); section.append(grid); groups[key] = { section, grid };
             });
             if (['cars', 'moto'].includes(state.section)) groups.details.grid.append(vehiclePicker());
-            Object.entries(schema.fields).forEach(([path, field]) => build(path, field, groups[path.startsWith('details.') ? 'details' : path.startsWith('rental.') ? 'rental' : 'general'].grid));
+            Object.entries(schema.fields).forEach(([path, field]) => build(path, field, groups[['city', 'region', 'contact_phone'].includes(path) ? 'contact' : path.startsWith('details.') ? 'details' : path.startsWith('rental.') ? 'rental' : 'general'].grid));
             Object.values(groups).forEach(({ section, grid }) => { if (grid.childElementCount) container.append(section); });
             button.disabled = false;
         } catch (error) { if (error.code !== 'ERR_CANCELED') { errors.textContent = explainError(error); errors.classList.remove('hidden'); } }
     }
+    form.querySelectorAll('[data-listing-section]').forEach(input => input.addEventListener('change', () => {
+        if (!input.checked || input.disabled || input.value === state.section) return;
+        collect(); state.section = input.value; state.offer_type = 'sale'; state.details = {}; state.vehicle_variant_id = null; state.part_product_id = null; catalog = [];
+        refresh();
+    }));
     form.addEventListener('submit', async event => {
         event.preventDefault(); if (button.disabled || !schema) return;
         collect();
@@ -194,6 +205,7 @@ export async function mount(form) {
                 existing = result.data.data.images; pond.removeFiles(); showImages();
             }
             status.textContent = payload.submit ? 'Saqlandi va moderatsiyaga yuborildi.' : 'Qoralama saqlandi.'; notify(status.textContent);
+            const saved = form.querySelector('[data-listing-saved]'); if (saved) saved.hidden = false;
         } catch (error) {
             errors.textContent = explainError(error); errors.classList.remove('hidden'); errors.scrollIntoView({ block: 'center', behavior: 'smooth' }); status.textContent = form.dataset.listingId ? 'E’lon saqlangan. Xatoni tuzatib qayta saqlashingiz mumkin.' : '';
             Object.keys(error.response?.data?.errors || {}).forEach(path => { const control = [...form.querySelectorAll('[data-path]')].find(input => input.dataset.path === path); if (control) control.setAttribute('aria-invalid', 'true'); });

@@ -13,6 +13,11 @@ class SessionController extends Controller
 {
     public function create()
     {
+        return view('auth.phone-start', ['phone' => '']);
+    }
+
+    public function email()
+    {
         return view('auth.session', ['register' => false]);
     }
 

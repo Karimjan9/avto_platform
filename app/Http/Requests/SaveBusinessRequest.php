@@ -9,11 +9,18 @@ use Illuminate\Validation\Rule;
 
 class SaveBusinessRequest extends FormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        if ($this->user()?->hasVerifiedPhone()) {
+            $this->merge(['phone' => $this->user()->phone]);
+        }
+    }
+
     public function authorize(): bool
     {
         $business = $this->route('business');
 
-        return $this->user() && (! $business instanceof Business || $this->user()->can('update', $business));
+        return $this->user()?->hasVerifiedPhone() && (! $business instanceof Business || $this->user()->can('update', $business));
     }
 
     public function rules(): array
